@@ -1,20 +1,20 @@
 import { AppShell } from "../../components/AppShell";
 
 const ducoNav = [
-  { href: "/duco", label: "Dashboard" },
-  { href: "/duco/purchase", label: "Purchase" },
-  { href: "/duco/production", label: "Production" },
-  { href: "/duco/sales", label: "Sales" },
-  { href: "/duco/stock", label: "Stock Overview" },
+  { href: "/duco", label: "Dashboard", icon: "LayoutDashboard", exact: true },
+  { href: "/duco/purchase", label: "Purchase", icon: "ShoppingCart" },
+  { href: "/duco/production", label: "Production", icon: "Factory" },
+  { href: "/duco/sales", label: "Sales", icon: "TrendingUp" },
+  { href: "/duco/stock", label: "Stock", icon: "Boxes" },
 ];
 
 export default function DucoLayout({ children }) {
   return (
     <AppShell
-      title="Duco Cups"
-      subtitle="Cup manufacturing inventory"
-      accentColor="#1D9E75"
+      companyName="Duco Cups"
+      brandColor="#1D9E75"
       navItems={ducoNav}
+      backLink={{ label: "← All Companies", href: "/" }}
     >
       {children}
     </AppShell>

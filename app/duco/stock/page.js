@@ -1,44 +1,75 @@
-import { StockTable } from "../../../components/StockTable";
-import { supabaseServer } from "../../../lib/supabaseServer";
+"use client";
 
-async function getStock() {
-  const [purchases, production, sales] = await Promise.all([
-    supabaseServer.from("duco_purchase").select("product_code, product_pcs_qty"),
-    supabaseServer.from("duco_production").select("product_code, product_pcs_qty, product_damage_pcs"),
-    supabaseServer.from("duco_sales").select("product_code, product_pcs_qty"),
-  ]);
+import { DataTable } from "../../../components/shared/DataTable";
+import { useStock } from "../../../hooks/useStock";
 
-  if (purchases.error || production.error || sales.error) {
-    return [];
-  }
+const columns = [
+  { key: "product_code", header: "Product code" },
+  { key: "product_name", header: "Product name" },
+  { key: "product_pic", header: "Image" },
+  {
+    key: "total_purchased_pcs",
+    header: "Purchased",
+    headerClassName: "text-right",
+    className: "text-right tabular-nums",
+  },
+  {
+    key: "total_produced_pcs",
+    header: "Produced",
+    headerClassName: "text-right",
+    className: "text-right tabular-nums",
+  },
+  {
+    key: "total_sold_pcs",
+    header: "Sold",
+    headerClassName: "text-right",
+    className: "text-right tabular-nums",
+  },
+  {
+    key: "total_damage_pcs",
+    header: "Damage",
+    headerClassName: "text-right",
+    className: "text-right tabular-nums",
+  },
+  {
+    key: "net_stock_pcs",
+    header: "Net stock",
+    headerClassName: "text-right",
+    className: "text-right",
+    render: (row) => (
+      <span className={row.net_stock_pcs <= 0 ? "text-base font-bold text-red-600" : "text-base font-semibold text-emerald-700"}>
+        {row.net_stock_pcs}
+      </span>
+    ),
+  },
+];
 
-  const totals = {};
+export default function DucoStockPage() {
+  const { stockItems, isLoading, error, refetch } = useStock("/api/duco/stock");
 
-  for (const item of purchases.data ?? []) {
-    totals[item.product_code] = totals[item.product_code] || { product_code: item.product_code, purchase: 0, production: 0, sales: 0, damage: 0 };
-    totals[item.product_code].purchase += Number(item.product_pcs_qty || 0);
-  }
-  for (const item of production.data ?? []) {
-    totals[item.product_code] = totals[item.product_code] || { product_code: item.product_code, purchase: 0, production: 0, sales: 0, damage: 0 };
-    totals[item.product_code].production += Number(item.product_pcs_qty || 0);
-    totals[item.product_code].damage += Number(item.product_damage_pcs || 0);
-  }
-  for (const item of sales.data ?? []) {
-    totals[item.product_code] = totals[item.product_code] || { product_code: item.product_code, purchase: 0, production: 0, sales: 0, damage: 0 };
-    totals[item.product_code].sales += Number(item.product_pcs_qty || 0);
-  }
-
-  return Object.values(totals).map((item) => ({
-    product_code: item.product_code,
-    net_stock: item.purchase + item.production - item.sales - item.damage,
-  }));
-}
-
-export default async function DucoStockPage() {
-  const rows = await getStock();
   return (
-    <div className="max-w-6xl">
-      <StockTable rows={rows} columns={["product_code", "net_stock"]} accentColor="#1D9E75" />
+    <div className="max-w-6xl space-y-4">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-semibold text-zinc-900 md:text-3xl">Stock by product</h1>
+          <p className="text-sm text-zinc-600">Net pieces from purchases, production, sales, and damage.</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => refetch()}
+          className="rounded-full border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-800 hover:bg-zinc-50"
+        >
+          Refresh
+        </button>
+      </div>
+      <p className="text-sm text-red-600">Red rows indicate low or out of stock (net ≤ 0).</p>
+      {error ? <p className="rounded-xl bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p> : null}
+      <DataTable
+        columns={columns}
+        data={stockItems}
+        isLoading={isLoading}
+        rowClassName={(row) => (row.is_low_stock ? "bg-red-50" : "hover:bg-zinc-50/80")}
+      />
     </div>
   );
 }

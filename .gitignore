@@ -32,6 +32,8 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+# non-standard local env filename (contains secrets; do not commit)
+/env
 
 # vercel
 .vercel

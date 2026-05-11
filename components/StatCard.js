@@ -1,4 +1,4 @@
-export function StatCard({ title, value, accentColor, description }) {
+export function StatCard({ title, value, accentColor, description, valueClassName }) {
   return (
     <div
       className="rounded-2xl border p-6 shadow-sm transition hover:-translate-y-0.5"
@@ -14,7 +14,10 @@ export function StatCard({ title, value, accentColor, description }) {
         </p>
         <div className="h-2 w-14 rounded-full" style={{ backgroundColor: accentColor, opacity: 0.9 }} />
       </div>
-      <p className="mt-5 text-3xl font-semibold" style={{ color: "var(--app-text)" }}>
+      <p
+        className={`mt-5 text-3xl font-semibold ${valueClassName || ""}`}
+        style={valueClassName ? undefined : { color: "var(--app-text)" }}
+      >
         {value}
       </p>
       {description ? (
