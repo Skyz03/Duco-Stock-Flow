@@ -6,22 +6,30 @@ export async function GET(request) {
     const url = new URL(request.url);
     const q = (url.searchParams.get("q") || "").trim();
 
-    let query = supabaseServer
-      .from("duco_purchase")
-      .select("product_code, product_name, product_pic, created_at")
-      .order("created_at", { ascending: false });
+    const buildQuery = (table) => {
+      let ql = supabaseServer.from(table).select("product_code, product_name, product_pic, created_at").order("created_at", {
+        ascending: false,
+      });
+      if (q) {
+        ql = ql.or(`product_code.ilike.%${q}%,product_name.ilike.%${q}%`);
+      }
+      return ql.limit(100);
+    };
 
-    if (q) {
-      query = query.or(`product_code.ilike.%${q}%,product_name.ilike.%${q}%`);
+    const [purchaseRes, productionRes, salesRes] = await Promise.all([
+      buildQuery("duco_purchase"),
+      buildQuery("duco_production"),
+      buildQuery("duco_sales"),
+    ]);
+
+    const err = purchaseRes.error || productionRes.error || salesRes.error;
+    if (err) {
+      return NextResponse.json({ error: err.message }, { status: 500 });
     }
 
-    const { data, error } = await query.limit(100);
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
-
+    const rows = [...(purchaseRes.data ?? []), ...(productionRes.data ?? []), ...(salesRes.data ?? [])];
     const map = new Map();
-    for (const row of data ?? []) {
+    for (const row of rows) {
       if (!row.product_code) continue;
       if (!map.has(row.product_code)) {
         map.set(row.product_code, {
