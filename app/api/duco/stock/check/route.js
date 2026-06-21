@@ -1,17 +1,25 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { loadDucoStockRows } from "../../../../../lib/ducoStockAggregate";
 import { supabaseServer } from "../../../../../lib/supabaseServer";
+
+const checkTypeSchema = z.enum(["sales", "production"]);
 
 export async function GET(request) {
   try {
     const url = new URL(request.url);
     const product_code = (url.searchParams.get("product_code") || "").trim();
     const qty = Number(url.searchParams.get("qty") || 0);
-    const type = url.searchParams.get("type") || "sales";
+    const typeParam = url.searchParams.get("type") || "sales";
+    const typeParsed = checkTypeSchema.safeParse(typeParam);
 
     if (!product_code) {
       return NextResponse.json({ error: "product_code is required" }, { status: 400 });
     }
+    if (!typeParsed.success) {
+      return NextResponse.json({ error: "type must be one of: sales, production" }, { status: 400 });
+    }
+    const type = typeParsed.data;
 
     const { error, rows } = await loadDucoStockRows(supabaseServer);
     if (error) {

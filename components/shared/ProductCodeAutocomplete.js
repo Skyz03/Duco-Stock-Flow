@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { useDebouncedValue } from "../../hooks/useDebouncedValue";
 
@@ -63,27 +64,32 @@ export function ProductCodeAutocomplete({ value, onChange, onSelect, apiPath, di
         }}
         onFocus={() => value && setOpen(true)}
         placeholder={placeholder || "Product code"}
-        className="mt-2 w-full rounded-xl border border-zinc-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-zinc-300"
+        className="mt-2 min-h-[44px] w-full rounded-xl border border-zinc-300 px-3 py-2.5 text-base outline-none focus:ring-2 focus:ring-zinc-300"
       />
       {loading ? <p className="mt-1 text-xs text-zinc-500">Searching…</p> : null}
       {open && (
-        <ul className="absolute z-20 mt-1 max-h-56 w-full overflow-auto rounded-xl border border-zinc-200 bg-white py-1 text-sm shadow-lg">
+        <ul className="absolute z-20 mt-1 max-h-56 w-full overflow-auto rounded-xl border border-zinc-200 bg-white py-1 text-base shadow-lg">
           {!items.length ? (
-            <li className="px-3 py-2 text-zinc-500">No products found</li>
+            <li className="px-3 py-3 text-zinc-500">No products found</li>
           ) : (
             items.map((p) => (
               <li key={p.product_code}>
                 <button
                   type="button"
-                  className="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-zinc-50"
+                  className="flex min-h-[44px] w-full items-center gap-3 px-3 py-3 text-left hover:bg-zinc-50 active:bg-zinc-100"
                   onClick={() => {
                     onSelect(p);
                     setOpen(false);
                   }}
                 >
                   {p.product_pic ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={p.product_pic} alt="" className="h-6 w-6 rounded object-cover" />
+                    <Image
+                      src={p.product_pic}
+                      alt={p.product_name || "Product"}
+                      width={24}
+                      height={24}
+                      className="rounded object-cover"
+                    />
                   ) : (
                     <span className="h-6 w-6 rounded bg-zinc-100" />
                   )}

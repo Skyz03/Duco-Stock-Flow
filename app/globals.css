@@ -32,8 +32,81 @@
   }
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background: radial-gradient(1200px circle at 0% 0%, #e2f4ec 0%, var(--app-bg) 55%);
   color: var(--app-text);
   font-family: var(--font-inter), "Inter", "Segoe UI", sans-serif;
+}
+
+/* Subtle grid background for hero sections */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgba(15, 23, 42, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(15, 23, 42, 0.04) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, rgba(226, 232, 240, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(226, 232, 240, 0.04) 1px, transparent 1px);
+  }
+}
+
+/* Animation keyframes */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Responsive panel animation: slides up from bottom on mobile, from right on desktop */
+.animate-entry-panel {
+  animation: slide-up 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (min-width: 768px) {
+  .animate-entry-panel {
+    animation: slide-in-right 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
 }

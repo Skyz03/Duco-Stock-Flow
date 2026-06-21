@@ -1,4 +1,10 @@
 import { EntriesWorkbench } from "../../../components/shared/EntriesWorkbench";
+import { THEME } from "../../../lib/theme";
+
+export const metadata = {
+  title: "Sales Entries — Duco Cups",
+  description: "Track outbound cup sales for Duco Cups.",
+};
 
 const fields = [
   {
@@ -18,7 +24,7 @@ const columns = [
   { key: "date", header: "Date" },
   { key: "product_code", header: "Code" },
   { key: "product_name", header: "Product" },
-  { key: "product_pic", header: "Image" },
+  { key: "product_pic", header: "Image", hideMobile: true },
   { key: "product_pcs_qty", header: "Pcs qty", headerClassName: "text-right", className: "text-right tabular-nums" },
 ];
 
@@ -29,7 +35,7 @@ export default function DucoSalesPage() {
         title="Sales entries"
         apiPath="/api/duco/sales"
         exportPath="/api/duco/sales/export"
-        accentColor="#1D9E75"
+        accentColor={THEME.duco.primary}
         fields={fields}
         columns={columns}
         stockCheck={{ apiPath: "/api/duco/stock/check", type: "sales", qtyField: "product_pcs_qty" }}

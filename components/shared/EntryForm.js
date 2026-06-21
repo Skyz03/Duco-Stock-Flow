@@ -43,7 +43,7 @@ function buildDefaults(fields) {
   return d;
 }
 
-export function EntryForm({ fields, onSubmit, isLoading, stockCheck, packWarning }) {
+export function EntryForm({ fields, onSubmit, isLoading, stockCheck, packWarning, accentColor }) {
   const schema = useMemo(() => buildSchema(fields), [fields]);
   const defaults = useMemo(() => buildDefaults(fields), [fields]);
   const {
@@ -61,10 +61,21 @@ export function EntryForm({ fields, onSubmit, isLoading, stockCheck, packWarning
 
   const codeField = stockCheck?.codeField || "product_code";
   const qtyField = stockCheck?.qtyField || "product_pcs_qty";
+  // purchaseField is used by the Pack model where a single row has both purchase and sales.
+  // The stock check needs both to compute the net effect of the row.
+  const purchaseField = stockCheck?.purchaseField ?? null;
+
   const codeVal = watch(codeField);
   const qtyVal = watch(qtyField);
+  // Always call watch — pass a dummy key when purchaseField is absent so hook count stays stable.
+  const purchaseRaw = watch(purchaseField ?? "__no_purchase_field__");
+
   const debouncedCode = useDebouncedValue(String(codeVal ?? "").trim(), 300);
   const debouncedQty = useDebouncedValue(String(qtyVal ?? ""), 500);
+  const debouncedPurchase = useDebouncedValue(
+    purchaseField != null ? String(purchaseRaw ?? "0") : "0",
+    500
+  );
 
   const [warn, setWarn] = useState(null);
 
@@ -90,6 +101,10 @@ export function EntryForm({ fields, onSubmit, isLoading, stockCheck, packWarning
           qty: String(qtyNum),
           type: stockCheck.type,
         });
+        if (purchaseField != null) {
+          const purchaseNum = Number(debouncedPurchase);
+          params.set("purchase_qty", String(Number.isFinite(purchaseNum) ? purchaseNum : 0));
+        }
         const res = await fetch(`${stockCheck.apiPath}?${params}`, { cache: "no-store" });
         const json = await res.json();
         if (cancelled) return;
@@ -112,7 +127,7 @@ export function EntryForm({ fields, onSubmit, isLoading, stockCheck, packWarning
     return () => {
       cancelled = true;
     };
-  }, [stockCheck, debouncedCode, debouncedQty, packWarning]);
+  }, [stockCheck, debouncedCode, debouncedQty, debouncedPurchase, purchaseField, packWarning]);
 
   async function submit(values) {
     const cleaned = { ...values };
@@ -182,17 +197,26 @@ export function EntryForm({ fields, onSubmit, isLoading, stockCheck, packWarning
         }
 
         const inputType = field.type === "integer" ? "number" : field.type === "date" ? "date" : "text";
+        const inputMode = field.type === "integer" ? "numeric" : undefined;
+        const errorId = `${field.name}-error`;
         return (
           <label key={field.name} className="block text-sm">
             <span className="font-medium text-zinc-800">{field.label}</span>
             <input
+              id={field.name}
               type={inputType}
+              inputMode={inputMode}
               step={field.type === "integer" ? 1 : undefined}
               disabled={isLoading}
-              className="mt-2 w-full rounded-xl border border-zinc-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-zinc-300"
+              aria-describedby={errors[field.name] ? errorId : undefined}
+              className="mt-2 min-h-[44px] w-full rounded-xl border border-zinc-300 px-3 py-2.5 text-base outline-none focus:ring-2 focus:ring-zinc-300"
               {...register(field.name)}
             />
-            {errors[field.name] ? <p className="mt-1 text-xs text-red-600">{errors[field.name].message}</p> : null}
+            {errors[field.name] ? (
+              <p id={errorId} className="mt-1 text-xs text-red-600" role="alert">
+                {errors[field.name].message}
+              </p>
+            ) : null}
           </label>
         );
       })}
@@ -200,7 +224,8 @@ export function EntryForm({ fields, onSubmit, isLoading, stockCheck, packWarning
       <button
         type="submit"
         disabled={isLoading}
-        className="mt-2 rounded-xl bg-zinc-900 px-4 py-3 text-sm font-semibold text-white hover:bg-zinc-800 disabled:opacity-50"
+        className="mt-2 min-h-[44px] w-full rounded-xl px-4 py-3 text-base font-semibold text-white transition hover:opacity-90 disabled:opacity-50"
+        style={{ backgroundColor: accentColor || "#18181b" }}
       >
         {isLoading ? "Saving…" : "Save entry"}
       </button>

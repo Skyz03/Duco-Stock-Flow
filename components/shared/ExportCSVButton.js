@@ -1,6 +1,8 @@
 "use client";
 
-export function ExportCSVButton({ exportUrl, filename, search, dateFrom, dateTo }) {
+import { Download } from "lucide-react";
+
+export function ExportCSVButton({ exportUrl, filename, search, dateFrom, dateTo, className = "" }) {
   function download() {
     const params = new URLSearchParams();
     if (search) params.set("search", search);
@@ -15,8 +17,9 @@ export function ExportCSVButton({ exportUrl, filename, search, dateFrom, dateTo 
     <button
       type="button"
       onClick={download}
-      className="rounded-full border border-zinc-300 bg-white px-4 py-2 text-sm font-semibold text-zinc-800 shadow-sm hover:bg-zinc-50"
+      className={`inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full border border-zinc-300 bg-white px-4 py-2.5 text-base font-semibold text-zinc-700 shadow-sm transition hover:bg-zinc-50 sm:text-sm ${className}`}
     >
+      <Download className="h-4 w-4" aria-hidden />
       Export CSV
     </button>
   );

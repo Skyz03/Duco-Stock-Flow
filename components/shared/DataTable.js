@@ -1,33 +1,55 @@
 "use client";
 
-export function DataTable({ columns, data, isLoading, onDelete, rowClassName }) {
+import Image from "next/image";
+import { Package, Trash2 } from "lucide-react";
+
+function isAbsoluteUrl(url) {
+  try {
+    const u = new URL(url);
+    return u.protocol === "http:" || u.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
+function cellVisibility(col) {
+  return col.hideMobile ? "hidden md:table-cell" : "";
+}
+
+export function DataTable({ columns, data, isLoading, onDelete, rowClassName, hasFilters }) {
   return (
-    <div className="overflow-x-auto rounded-2xl border border-zinc-200">
-      <table className="min-w-full divide-y divide-zinc-200 text-left text-sm">
-        <thead className="bg-zinc-50">
+    <div className="overflow-x-auto rounded-2xl border border-zinc-200 bg-white">
+      <table className="min-w-full divide-y divide-zinc-100 text-left text-sm">
+        <thead className="bg-zinc-50/80">
           <tr>
             {columns.map((col) => (
-              <th key={col.key} className={`px-4 py-3 font-medium text-zinc-700 ${col.headerClassName || ""}`}>
+              <th
+                key={col.key}
+                scope="col"
+                className={`px-4 py-3 text-[11px] font-bold uppercase tracking-[0.1em] text-zinc-500 ${cellVisibility(col)} ${col.headerClassName || ""}`}
+              >
                 {col.header}
               </th>
             ))}
             {onDelete ? (
-              <th className="px-4 py-3 font-medium text-zinc-700">Actions</th>
+              <th scope="col" className="px-4 py-3 text-[11px] font-bold uppercase tracking-[0.1em] text-zinc-500">
+                Actions
+              </th>
             ) : null}
           </tr>
         </thead>
-        <tbody className="divide-y divide-zinc-200">
+        <tbody className="divide-y divide-zinc-100">
           {isLoading
             ? Array.from({ length: 5 }).map((_, i) => (
                 <tr key={i}>
                   {columns.map((col) => (
-                    <td key={col.key} className="px-4 py-3">
-                      <div className="h-4 animate-pulse rounded bg-zinc-200" />
+                    <td key={col.key} className={`px-4 py-3.5 ${cellVisibility(col)}`}>
+                      <div className="h-4 animate-pulse rounded-md bg-zinc-100" />
                     </td>
                   ))}
                   {onDelete ? (
-                    <td className="px-4 py-3">
-                      <div className="h-8 w-16 animate-pulse rounded bg-zinc-200" />
+                    <td className="px-4 py-3.5">
+                      <div className="h-8 w-9 animate-pulse rounded-lg bg-zinc-100" />
                     </td>
                   ) : null}
                 </tr>
@@ -35,22 +57,45 @@ export function DataTable({ columns, data, isLoading, onDelete, rowClassName }) 
             : null}
           {!isLoading && !data.length ? (
             <tr>
-              <td colSpan={columns.length + (onDelete ? 1 : 0)} className="px-4 py-10 text-center text-zinc-500">
-                No entries found.
+              <td colSpan={columns.length + (onDelete ? 1 : 0)} className="px-4 py-14 text-center">
+                <div className="flex flex-col items-center gap-3">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-zinc-100">
+                    <Package className="h-6 w-6 text-zinc-400" aria-hidden />
+                  </div>
+                  <p className="text-sm font-medium text-zinc-500">
+                    {hasFilters
+                      ? "No entries match your filters."
+                      : "No entries yet. Add your first entry!"}
+                  </p>
+                </div>
               </td>
             </tr>
           ) : null}
           {!isLoading &&
             data.map((row) => (
-              <tr key={row.id || row.product_code} className={rowClassName ? rowClassName(row) : "hover:bg-zinc-50/80"}>
+              <tr
+                key={row.id || row.product_code}
+                className={
+                  rowClassName
+                    ? rowClassName(row)
+                    : "transition-colors duration-100 hover:bg-zinc-50/60"
+                }
+              >
                 {columns.map((col) => (
-                  <td key={col.key} className={`px-4 py-3 text-zinc-800 ${col.className || ""}`}>
+                  <td key={col.key} className={`px-4 py-3.5 text-zinc-800 ${cellVisibility(col)} ${col.className || ""}`}>
                     {col.key === "product_pic" ? (
-                      row.product_pic ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={row.product_pic} alt="" className="h-10 w-10 rounded-md object-cover ring-1 ring-zinc-200" />
+                      row.product_pic && isAbsoluteUrl(row.product_pic) ? (
+                        <Image
+                          src={row.product_pic}
+                          alt={row.product_name || "Product"}
+                          width={40}
+                          height={40}
+                          className="rounded-lg object-cover ring-1 ring-zinc-200"
+                        />
                       ) : (
-                        <span className="text-zinc-400">—</span>
+                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-zinc-100">
+                          <Package className="h-4 w-4 text-zinc-400" aria-hidden />
+                        </div>
                       )
                     ) : col.render ? (
                       col.render(row)
@@ -60,13 +105,14 @@ export function DataTable({ columns, data, isLoading, onDelete, rowClassName }) 
                   </td>
                 ))}
                 {onDelete ? (
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3.5">
                     <button
                       type="button"
                       onClick={() => onDelete(row.id)}
-                      className="rounded-full bg-red-500 px-3 py-1 text-xs font-semibold text-white hover:bg-red-600"
+                      aria-label="Delete entry"
+                      className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg border border-zinc-200 text-zinc-400 transition-all hover:border-red-200 hover:bg-red-50 hover:text-red-600"
                     >
-                      Delete
+                      <Trash2 className="h-3.5 w-3.5" aria-hidden />
                     </button>
                   </td>
                 ) : null}
