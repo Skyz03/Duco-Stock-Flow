@@ -1,4 +1,5 @@
 import { AppShell } from "../../components/AppShell";
+import { THEME } from "../../lib/theme";
 
 const packNav = [
   { href: "/pack", label: "Dashboard", icon: "LayoutDashboard", exact: true },
@@ -10,7 +11,7 @@ export default function PackLayout({ children }) {
   return (
     <AppShell
       companyName="Packmandu"
-      brandColor="#185FA5"
+      brandColor={THEME.pack.primary}
       navItems={packNav}
       backLink={{ label: "← All Companies", href: "/" }}
     >

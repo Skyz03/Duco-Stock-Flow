@@ -1,4 +1,10 @@
 import { EntriesWorkbench } from "../../../components/shared/EntriesWorkbench";
+import { THEME } from "../../../lib/theme";
+
+export const metadata = {
+  title: "Production Entries — Duco Cups",
+  description: "Log production output and damage entries for Duco Cups.",
+};
 
 const fields = [
   {
@@ -20,10 +26,10 @@ const columns = [
   { key: "date", header: "Date" },
   { key: "product_code", header: "Code" },
   { key: "product_name", header: "Product" },
-  { key: "product_pic", header: "Image" },
+  { key: "product_pic", header: "Image", hideMobile: true },
   { key: "product_pcs_qty", header: "Pcs qty", headerClassName: "text-right", className: "text-right tabular-nums" },
-  { key: "product_damage_pcs", header: "Damage pcs", headerClassName: "text-right", className: "text-right tabular-nums" },
-  { key: "product_damage_boxes", header: "Damage boxes", headerClassName: "text-right", className: "text-right tabular-nums" },
+  { key: "product_damage_pcs", header: "Damage pcs", headerClassName: "text-right", className: "text-right tabular-nums", hideMobile: true },
+  { key: "product_damage_boxes", header: "Damage boxes", headerClassName: "text-right", className: "text-right tabular-nums", hideMobile: true },
 ];
 
 export default function DucoProductionPage() {
@@ -33,10 +39,9 @@ export default function DucoProductionPage() {
         title="Production entries"
         apiPath="/api/duco/production"
         exportPath="/api/duco/production/export"
-        accentColor="#1D9E75"
+        accentColor={THEME.duco.primary}
         fields={fields}
         columns={columns}
-        stockCheck={{ apiPath: "/api/duco/stock/check", type: "production", qtyField: "product_pcs_qty" }}
       />
     </div>
   );

@@ -1,6 +1,8 @@
 "use client";
 
+import { Plus } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 import { useEntries } from "../../hooks/useEntries";
 import { ConfirmDeleteDialog } from "./ConfirmDeleteDialog";
 import { DataTable } from "./DataTable";
@@ -43,11 +45,11 @@ export function EntriesWorkbench({
   const [deleteId, setDeleteId] = useState(null);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
-  const [banner, setBanner] = useState("");
+
+  const hasFilters = Boolean(search || dateFrom || dateTo);
 
   async function handleSubmit(payload) {
     setSaving(true);
-    setBanner("");
     try {
       const res = await fetch(apiPath, {
         method: "POST",
@@ -64,9 +66,10 @@ export function EntriesWorkbench({
         throw new Error(json.error || "Save failed");
       }
       setPanelOpen(false);
+      toast.success("Entry saved");
       await refetch();
     } catch (e) {
-      setBanner(e instanceof Error ? e.message : "Save failed");
+      toast.error(e instanceof Error ? e.message : "Save failed");
     } finally {
       setSaving(false);
     }
@@ -75,7 +78,6 @@ export function EntriesWorkbench({
   async function confirmDelete() {
     if (!deleteId) return;
     setDeleting(true);
-    setBanner("");
     try {
       const res = await fetch(`${apiPath}?id=${deleteId}`, { method: "DELETE" });
       let json = {};
@@ -88,9 +90,10 @@ export function EntriesWorkbench({
         throw new Error(json.error || "Delete failed");
       }
       setDeleteId(null);
+      toast.success("Entry deleted");
       await refetch();
     } catch (e) {
-      setBanner(e instanceof Error ? e.message : "Delete failed");
+      toast.error(e instanceof Error ? e.message : "Delete failed");
     } finally {
       setDeleting(false);
     }
@@ -114,13 +117,14 @@ export function EntriesWorkbench({
             setDateTo={setDateTo}
           />
         </div>
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:flex-wrap sm:items-center">
           <ExportCSVButton
             exportUrl={exportPath}
             filename="export.csv"
             search={effectiveSearch}
             dateFrom={dateFrom}
             dateTo={dateTo}
+            className="w-full sm:w-auto"
           />
           <button
             type="button"
@@ -128,18 +132,35 @@ export function EntriesWorkbench({
               setPanelKey((k) => k + 1);
               setPanelOpen(true);
             }}
-            className="rounded-full px-4 py-2 text-sm font-semibold text-white shadow-sm"
+            className="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-full px-4 py-2.5 text-base font-semibold text-white shadow-sm transition hover:opacity-90 sm:w-auto sm:text-sm"
             style={{ backgroundColor: accentColor }}
           >
+            <Plus className="h-4 w-4" aria-hidden />
             Add entry
           </button>
         </div>
       </div>
 
-      {error ? <p className="rounded-xl bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p> : null}
-      {banner ? <p className="rounded-xl bg-amber-50 px-3 py-2 text-sm text-amber-900">{banner}</p> : null}
+      {error ? (
+        <div className="flex items-center justify-between rounded-xl bg-red-50 px-3 py-2 text-sm text-red-700">
+          <p>{error}</p>
+          <button
+            type="button"
+            onClick={refetch}
+            className="ml-4 shrink-0 rounded-lg border border-red-200 px-3 py-1 text-xs font-medium hover:bg-red-100"
+          >
+            Retry
+          </button>
+        </div>
+      ) : null}
 
-      <DataTable columns={columns} data={entries} isLoading={isLoading} onDelete={(id) => setDeleteId(id)} />
+      <DataTable
+        columns={columns}
+        data={entries}
+        isLoading={isLoading}
+        onDelete={(id) => setDeleteId(id)}
+        hasFilters={hasFilters}
+      />
 
       <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
 
@@ -154,6 +175,7 @@ export function EntriesWorkbench({
             isLoading={saving}
             stockCheck={stockCheck}
             packWarning={packWarning}
+            accentColor={accentColor}
           />
         ) : null}
       </SlideOver>

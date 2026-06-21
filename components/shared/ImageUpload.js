@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 
 export function ImageUpload({ value, onChange, disabled }) {
@@ -36,8 +37,13 @@ export function ImageUpload({ value, onChange, disabled }) {
           <input type="file" accept="image/*" className="hidden" disabled={disabled || uploading} onChange={onFile} />
         </label>
         {value ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={value} alt="" className="h-12 w-12 rounded-lg object-cover ring-1 ring-zinc-200" />
+          <Image
+            src={value}
+            alt="Uploaded product image preview"
+            width={48}
+            height={48}
+            className="rounded-lg object-cover ring-1 ring-zinc-200"
+          />
         ) : null}
       </div>
       {value ? (

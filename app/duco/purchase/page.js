@@ -1,4 +1,10 @@
 import { EntriesWorkbench } from "../../../components/shared/EntriesWorkbench";
+import { THEME } from "../../../lib/theme";
+
+export const metadata = {
+  title: "Purchase Entries — Duco Cups",
+  description: "Log and manage cup purchase entries for Duco Cups.",
+};
 
 const fields = [
   { name: "product_code", label: "Product code", type: "string", required: true },
@@ -13,8 +19,8 @@ const columns = [
   { key: "date", header: "Date" },
   { key: "product_code", header: "Code" },
   { key: "product_name", header: "Product" },
-  { key: "product_pic", header: "Image" },
-  { key: "product_box_qty", header: "Box qty", headerClassName: "text-right", className: "text-right tabular-nums" },
+  { key: "product_pic", header: "Image", hideMobile: true },
+  { key: "product_box_qty", header: "Box qty", headerClassName: "text-right", className: "text-right tabular-nums", hideMobile: true },
   { key: "product_pcs_qty", header: "Pcs qty", headerClassName: "text-right", className: "text-right tabular-nums" },
 ];
 
@@ -25,7 +31,7 @@ export default function DucoPurchasePage() {
         title="Purchase entries"
         apiPath="/api/duco/purchase"
         exportPath="/api/duco/purchase/export"
-        accentColor="#1D9E75"
+        accentColor={THEME.duco.primary}
         fields={fields}
         columns={columns}
       />

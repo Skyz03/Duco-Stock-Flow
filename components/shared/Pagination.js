@@ -13,7 +13,7 @@ export function Pagination({ page, totalPages, onPageChange }) {
           type="button"
           disabled={page <= 1}
           onClick={() => onPageChange(page - 1)}
-          className="rounded-full border border-zinc-300 px-4 py-2 font-medium text-zinc-800 hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-40"
+          className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-zinc-300 px-4 py-2.5 text-base font-medium text-zinc-800 hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-40 md:text-sm"
         >
           Previous
         </button>
@@ -21,7 +21,7 @@ export function Pagination({ page, totalPages, onPageChange }) {
           type="button"
           disabled={page >= last}
           onClick={() => onPageChange(page + 1)}
-          className="rounded-full border border-zinc-300 px-4 py-2 font-medium text-zinc-800 hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-40"
+          className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-zinc-300 px-4 py-2.5 text-base font-medium text-zinc-800 hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-40 md:text-sm"
         >
           Next
         </button>

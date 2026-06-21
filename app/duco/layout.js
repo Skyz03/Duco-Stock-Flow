@@ -1,4 +1,5 @@
 import { AppShell } from "../../components/AppShell";
+import { THEME } from "../../lib/theme";
 
 const ducoNav = [
   { href: "/duco", label: "Dashboard", icon: "LayoutDashboard", exact: true },
@@ -12,7 +13,7 @@ export default function DucoLayout({ children }) {
   return (
     <AppShell
       companyName="Duco Cups"
-      brandColor="#1D9E75"
+      brandColor={THEME.duco.primary}
       navItems={ducoNav}
       backLink={{ label: "← All Companies", href: "/" }}
     >

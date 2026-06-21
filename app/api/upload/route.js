@@ -38,6 +38,16 @@ export async function POST(request) {
       return NextResponse.json({ error: "Missing file field in multipart form data." }, { status: 400 });
     }
 
+    const allowedMimeTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+    if (!allowedMimeTypes.includes(file.type)) {
+      return NextResponse.json({ error: "Only JPEG, PNG, WebP, and GIF images are allowed." }, { status: 400 });
+    }
+
+    const maxSizeBytes = 5 * 1024 * 1024;
+    if (file.size > maxSizeBytes) {
+      return NextResponse.json({ error: "File must be under 5 MB." }, { status: 400 });
+    }
+
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
     const mime = file.type || "application/octet-stream";
