@@ -15,6 +15,12 @@ npm run start    # Start production server (after build)
 
 There are no tests in this project.
 
+## Tech Stack
+
+Next.js 16 (App Router) · React 19 · Tailwind CSS v4 · Supabase (`@supabase/supabase-js` + `@supabase/auth-helpers-nextjs`) · Cloudinary for images · Zod v4 + react-hook-form for forms/validation · `json2csv` for CSV exports · `sonner` for toasts · `lucide-react` for icons.
+
+Note: `prisma`, `@prisma/client`, `next-auth`, and `bcryptjs` are listed in `package.json` but are **not currently used** anywhere in the source — there is no Prisma schema and no auth. Treat them as unused until wired up.
+
 ## Environment Variables
 
 The app reads from a root file named `env` (no dot prefix) in addition to standard `.env*` files — this is handled in `next.config.mjs`. Required variables:
@@ -96,3 +102,9 @@ API routes follow REST conventions on a single URL:
 - `DELETE ?id=<uuid>` — delete by primary key
 
 Export routes (`/export`) accept the same `search`, `from`, `to` params and return `text/csv` via `json2csv`. The shared `entryExportQuery(supabase, tableName, request)` helper in `lib/entryExportQuery.js` builds the filtered query for reuse across export routes.
+
+### `next.config.mjs` behavior
+
+Beyond loading the root `env` file (see Environment Variables), `next.config.mjs` also:
+- Adds security headers to all routes: `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy: strict-origin-when-cross-origin`, `X-XSS-Protection: 1; mode=block`.
+- Allows remote images only from `res.cloudinary.com` (`images.remotePatterns`), so `next/image` sources must come from Cloudinary.
