@@ -9,36 +9,55 @@ const columns = [
   { key: "product_name", header: "Product name" },
   { key: "product_pic", header: "Image", hideMobile: true },
   {
-    key: "total_purchased_pcs",
-    header: "Purchased",
+    key: "total_carton_purchased",
+    header: "Cartons in",
     headerClassName: "text-right",
     className: "text-right tabular-nums",
     hideMobile: true,
   },
   {
+    key: "total_carton_used",
+    header: "Cartons used",
+    headerClassName: "text-right",
+    className: "text-right tabular-nums",
+    hideMobile: true,
+  },
+  {
+    key: "net_carton_stock",
+    header: "Cartons left",
+    headerClassName: "text-right",
+    className: "text-right tabular-nums font-semibold",
+    hideMobile: true,
+    render: (row) => (
+      <span className={row.net_carton_stock <= 0 ? "text-red-600 font-bold" : "text-zinc-800"}>
+        {row.net_carton_stock}
+      </span>
+    ),
+  },
+  {
     key: "total_produced_pcs",
-    header: "Produced",
+    header: "Produced (pcs)",
     headerClassName: "text-right",
     className: "text-right tabular-nums",
     hideMobile: true,
   },
   {
     key: "total_sold_pcs",
-    header: "Sold",
+    header: "Sold (pcs)",
     headerClassName: "text-right",
     className: "text-right tabular-nums",
     hideMobile: true,
   },
   {
     key: "total_damage_pcs",
-    header: "Damage",
+    header: "Damage (pcs)",
     headerClassName: "text-right",
     className: "text-right tabular-nums text-red-500",
     hideMobile: true,
   },
   {
     key: "net_stock_pcs",
-    header: "Net stock",
+    header: "Net stock (pcs)",
     headerClassName: "text-right",
     className: "text-right",
     render: (row) => (

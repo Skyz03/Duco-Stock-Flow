@@ -9,7 +9,9 @@ import { ProductBreakdownTable } from "./shared/ProductBreakdownTable";
 import { StatCard } from "./StatCard";
 
 const cards = [
-  { href: "/pack/entries", title: "Inventory", description: "Add purchase, sales, and damage rows.", icon: Package },
+  { href: "/pack/purchase", title: "Purchase", description: "Log boxes purchased.", icon: Package },
+  { href: "/pack/sales", title: "Sales", description: "Log boxes sold.", icon: ShoppingBag },
+  { href: "/pack/damage", title: "Damage", description: "Log damaged boxes.", icon: AlertTriangle },
   { href: "/pack/stock", title: "Stock", description: "Net boxes by product code.", icon: Boxes },
 ];
 

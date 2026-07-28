@@ -12,7 +12,9 @@ function buildSchema(fields) {
   const shape = {};
   for (const f of fields) {
     const name = f.name;
-    if (f.type === "integer") {
+    if (f.type === "hidden") {
+      shape[name] = z.any().optional();
+    } else if (f.type === "integer") {
       const min = f.min != null ? f.min : f.required ? 1 : 0;
       shape[name] = z.preprocess((v) => {
         if (v === "" || v === null || v === undefined) return f.required ? undefined : (f.defaultValue ?? 0);
@@ -35,6 +37,7 @@ function buildDefaults(fields) {
   const today = new Date().toISOString().slice(0, 10);
   for (const f of fields) {
     if (f.defaultValue !== undefined) d[f.name] = f.defaultValue;
+    else if (f.type === "hidden") d[f.name] = 1;
     else if (f.type === "date") d[f.name] = today;
     else if (f.type === "integer" && !f.required) d[f.name] = f.defaultValue ?? 0;
     else if (f.type === "integer") d[f.name] = "";
@@ -61,19 +64,18 @@ export function EntryForm({ fields, onSubmit, isLoading, stockCheck, packWarning
 
   const codeField = stockCheck?.codeField || "product_code";
   const qtyField = stockCheck?.qtyField || "product_pcs_qty";
-  // purchaseField is used by the Pack model where a single row has both purchase and sales.
-  // The stock check needs both to compute the net effect of the row.
-  const purchaseField = stockCheck?.purchaseField ?? null;
+  // multiplierField: when set, effective qty sent to stock check = watch(qtyField) × watch(multiplierField)
+  const multiplierField = stockCheck?.multiplierField ?? null;
 
   const codeVal = watch(codeField);
   const qtyVal = watch(qtyField);
-  // Always call watch — pass a dummy key when purchaseField is absent so hook count stays stable.
-  const purchaseRaw = watch(purchaseField ?? "__no_purchase_field__");
+  // Always call watch — pass a dummy key when multiplierField is absent so hook count stays stable.
+  const multiplierRaw = watch(multiplierField ?? "__no_multiplier_field__");
 
   const debouncedCode = useDebouncedValue(String(codeVal ?? "").trim(), 300);
   const debouncedQty = useDebouncedValue(String(qtyVal ?? ""), 500);
-  const debouncedPurchase = useDebouncedValue(
-    purchaseField != null ? String(purchaseRaw ?? "0") : "0",
+  const debouncedMultiplier = useDebouncedValue(
+    multiplierField != null ? String(multiplierRaw ?? "1") : "1",
     500
   );
 
@@ -96,15 +98,13 @@ export function EntryForm({ fields, onSubmit, isLoading, stockCheck, packWarning
     let cancelled = false;
     async function run() {
       try {
+        const multiplierNum = Math.max(1, Number(debouncedMultiplier) || 1);
+        const effectiveQty = multiplierField != null ? qtyNum * multiplierNum : qtyNum;
         const params = new URLSearchParams({
           product_code: debouncedCode,
-          qty: String(qtyNum),
+          qty: String(effectiveQty),
           type: stockCheck.type,
         });
-        if (purchaseField != null) {
-          const purchaseNum = Number(debouncedPurchase);
-          params.set("purchase_qty", String(Number.isFinite(purchaseNum) ? purchaseNum : 0));
-        }
         const res = await fetch(`${stockCheck.apiPath}?${params}`, { cache: "no-store" });
         const json = await res.json();
         if (cancelled) return;
@@ -127,16 +127,17 @@ export function EntryForm({ fields, onSubmit, isLoading, stockCheck, packWarning
     return () => {
       cancelled = true;
     };
-  }, [stockCheck, debouncedCode, debouncedQty, debouncedPurchase, purchaseField, packWarning]);
+  }, [stockCheck, debouncedCode, debouncedQty, debouncedMultiplier, multiplierField, packWarning]);
 
   async function submit(values) {
     const cleaned = { ...values };
     for (const f of fields) {
-      if (f.type === "image_url") {
+      if (f.type === "hidden") {
+        delete cleaned[f.name];
+      } else if (f.type === "image_url") {
         const v = cleaned[f.name];
         cleaned[f.name] = v && v !== "" ? v : null;
-      }
-      if (f.type === "integer" && !f.required && (cleaned[f.name] === "" || cleaned[f.name] == null)) {
+      } else if (f.type === "integer" && !f.required && (cleaned[f.name] === "" || cleaned[f.name] == null)) {
         cleaned[f.name] = f.defaultValue ?? 0;
       }
     }
@@ -147,13 +148,17 @@ export function EntryForm({ fields, onSubmit, isLoading, stockCheck, packWarning
   return (
     <form onSubmit={handleSubmit(submit)} className="grid gap-4">
       {warn ? (
-        <div className="rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">
+        <div className="rounded-xl border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-800">
           Warning: current stock is {warn.current} {warn.unit}. This entry will result in {warn.proposed} {warn.unit}{" "}
           (negative stock).
         </div>
       ) : null}
 
       {fields.map((field) => {
+        if (field.type === "hidden") {
+          return <input key={field.name} type="hidden" {...register(field.name)} />;
+        }
+
         if (field.autocompletePath && field.name === "product_code") {
           return (
             <div key={field.name} className="block text-sm">
@@ -166,11 +171,13 @@ export function EntryForm({ fields, onSubmit, isLoading, stockCheck, packWarning
                     value={f.value || ""}
                     onChange={f.onChange}
                     onSelect={(p) => {
-                      setValue("product_code", p.product_code);
-                      setValue("product_name", p.product_name);
-                      if (fields.some((x) => x.name === "product_pic")) {
-                        setValue("product_pic", p.product_pic || "");
+                      for (const fd of fields) {
+                        if (Object.prototype.hasOwnProperty.call(p, fd.name)) {
+                          setValue(fd.name, p[fd.name] ?? (fd.type === "integer" || fd.type === "hidden" ? 0 : ""));
+                        }
                       }
+                      setValue("product_code", p.product_code);
+                      setValue("product_name", p.product_name ?? "");
                     }}
                     apiPath={field.autocompletePath}
                     disabled={isLoading}

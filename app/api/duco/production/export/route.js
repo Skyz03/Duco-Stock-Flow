@@ -8,9 +8,10 @@ const exportFields = [
   "id",
   "product_code",
   "product_name",
+  "country_of_origin",
+  "product_box_used",
   "product_pcs_qty",
   "product_damage_pcs",
-  "product_damage_boxes",
   "date",
   "created_at",
 ];

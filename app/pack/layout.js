@@ -3,7 +3,10 @@ import { THEME } from "../../lib/theme";
 
 const packNav = [
   { href: "/pack", label: "Dashboard", icon: "LayoutDashboard", exact: true },
-  { href: "/pack/entries", label: "Inventory", icon: "ClipboardList" },
+  { href: "/pack/registration", label: "Products", icon: "ClipboardList" },
+  { href: "/pack/purchase", label: "Purchase", icon: "ShoppingCart" },
+  { href: "/pack/sales", label: "Sales", icon: "TrendingUp" },
+  { href: "/pack/damage", label: "Damage", icon: "PackageX" },
   { href: "/pack/stock", label: "Stock", icon: "Boxes" },
 ];
 

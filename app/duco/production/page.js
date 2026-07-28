@@ -7,18 +7,13 @@ export const metadata = {
 };
 
 const fields = [
-  {
-    name: "product_code",
-    label: "Product code",
-    type: "string",
-    required: true,
-    autocompletePath: "/api/duco/products",
-  },
+  { name: "product_code", label: "Product code", type: "string", required: true, autocompletePath: "/api/duco/products" },
   { name: "product_name", label: "Product name", type: "string", required: true },
   { name: "product_pic", label: "Product image", type: "image_url", required: false },
-  { name: "product_pcs_qty", label: "Produced pieces", type: "integer", required: true, min: 1 },
-  { name: "product_damage_pcs", label: "Damage pieces", type: "integer", required: false, min: 0, defaultValue: 0 },
-  { name: "product_damage_boxes", label: "Damage boxes", type: "integer", required: false, min: 0, defaultValue: 0 },
+  { name: "country_of_origin", label: "Country of origin", type: "string", required: true },
+  { name: "product_box_used", label: "Cartons used", type: "integer", required: false, min: 0, defaultValue: 0 },
+  { name: "product_pcs_qty", label: "Qty produced (pcs)", type: "integer", required: true, min: 1 },
+  { name: "product_damage_pcs", label: "Qty damage (pcs)", type: "integer", required: false, min: 0, defaultValue: 0 },
   { name: "date", label: "Date", type: "date", required: true },
 ];
 
@@ -27,9 +22,10 @@ const columns = [
   { key: "product_code", header: "Code" },
   { key: "product_name", header: "Product" },
   { key: "product_pic", header: "Image", hideMobile: true },
-  { key: "product_pcs_qty", header: "Pcs qty", headerClassName: "text-right", className: "text-right tabular-nums" },
-  { key: "product_damage_pcs", header: "Damage pcs", headerClassName: "text-right", className: "text-right tabular-nums", hideMobile: true },
-  { key: "product_damage_boxes", header: "Damage boxes", headerClassName: "text-right", className: "text-right tabular-nums", hideMobile: true },
+  { key: "country_of_origin", header: "Origin", hideMobile: true },
+  { key: "product_box_used", header: "Cartons used", headerClassName: "text-right", className: "text-right tabular-nums", hideMobile: true },
+  { key: "product_pcs_qty", header: "Produced (pcs)", headerClassName: "text-right", className: "text-right tabular-nums" },
+  { key: "product_damage_pcs", header: "Damage (pcs)", headerClassName: "text-right", className: "text-right tabular-nums text-red-500", hideMobile: true },
 ];
 
 export default function DucoProductionPage() {

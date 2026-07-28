@@ -4,7 +4,7 @@ import { entryExportQuery } from "../../../../../lib/entryExportQuery";
 import { supabaseServer } from "../../../../../lib/supabaseServer";
 
 const tableName = "duco_sales";
-const exportFields = ["id", "product_code", "product_name", "product_pcs_qty", "date", "created_at"];
+const exportFields = ["id", "product_code", "product_name", "country_of_origin", "product_box_qty", "product_pcs_qty", "date", "created_at"];
 
 export async function GET(request) {
   try {

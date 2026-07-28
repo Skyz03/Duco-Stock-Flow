@@ -9,6 +9,7 @@ import {
   Factory,
   LayoutDashboard,
   Layers,
+  PackageX,
   ShoppingCart,
   TrendingUp,
 } from "lucide-react";
@@ -20,6 +21,7 @@ const ICON_MAP = {
   TrendingUp,
   Boxes,
   ClipboardList,
+  PackageX,
 };
 
 function NavItem({ item, pathname, brandColor, onNavigate }) {

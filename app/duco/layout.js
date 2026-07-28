@@ -3,6 +3,7 @@ import { THEME } from "../../lib/theme";
 
 const ducoNav = [
   { href: "/duco", label: "Dashboard", icon: "LayoutDashboard", exact: true },
+  { href: "/duco/registration", label: "Products", icon: "ClipboardList" },
   { href: "/duco/purchase", label: "Purchase", icon: "ShoppingCart" },
   { href: "/duco/production", label: "Production", icon: "Factory" },
   { href: "/duco/sales", label: "Sales", icon: "TrendingUp" },

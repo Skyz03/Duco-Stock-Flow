@@ -1,23 +1,46 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { buildListResponse, handleDeleteById } from "../../../../lib/api/entryRouteHelpers";
-import { assertRegistered, getDucoCupQtyPerBox } from "../../../../lib/api/assertRegistered";
+import { handleDeleteById } from "../../../../lib/api/entryRouteHelpers";
 import { supabaseServer } from "../../../../lib/supabaseServer";
 
-const tableName = "duco_sales";
+const tableName = "duco_products";
 
 const postSchema = z.object({
   product_code: z.string().min(1),
   product_name: z.string().min(1),
   product_pic: z.union([z.string().url(), z.literal("")]).optional(),
   country_of_origin: z.string().min(1),
-  product_box_qty: z.coerce.number().int().positive(),
-  date: z.string().min(1),
+  cup_qty_per_box: z.coerce.number().int().positive(),
 });
 
 export async function GET(request) {
   try {
-    return await buildListResponse(tableName, request);
+    const url = new URL(request.url);
+    const search = url.searchParams.get("search") || "";
+    const page = Math.max(1, Number(url.searchParams.get("page") || 1));
+    const limit = Math.min(100, Math.max(1, Number(url.searchParams.get("limit") || 20)));
+    const offset = (page - 1) * limit;
+
+    let query = supabaseServer
+      .from(tableName)
+      .select("*", { count: "exact" })
+      .order("created_at", { ascending: false })
+      .range(offset, offset + limit - 1);
+
+    if (search) {
+      query = query.or(`product_code.ilike.%${search}%,product_name.ilike.%${search}%`);
+    }
+
+    const { data, count, error } = await query;
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+    const total = count ?? 0;
+    return NextResponse.json({
+      data: data ?? [],
+      count: total,
+      page,
+      totalPages: Math.max(1, Math.ceil(total / limit)),
+    });
   } catch (e) {
     return NextResponse.json({ error: e instanceof Error ? e.message : "Unexpected error" }, { status: 500 });
   }
@@ -31,21 +54,17 @@ export async function POST(request) {
       return NextResponse.json({ error: "Validation failed", issues: parsed.error.issues }, { status: 400 });
     }
 
-    const notRegistered = await assertRegistered(supabaseServer, "duco_products", parsed.data.product_code);
-    if (notRegistered) return notRegistered;
-
-    const cup_qty_per_box = await getDucoCupQtyPerBox(supabaseServer, parsed.data.product_code);
-    const product_pcs_qty = parsed.data.product_box_qty * cup_qty_per_box;
-
     const { product_pic, ...rest } = parsed.data;
-    const payload = {
-      ...rest,
-      product_pic: product_pic && product_pic !== "" ? product_pic : null,
-      product_pcs_qty,
-    };
+    const payload = { ...rest, product_pic: product_pic && product_pic !== "" ? product_pic : null };
 
     const { data, error } = await supabaseServer.from(tableName).insert([payload]).select().single();
     if (error) {
+      if (error.code === "23505") {
+        return NextResponse.json(
+          { error: `Product code "${parsed.data.product_code}" is already registered.` },
+          { status: 409 }
+        );
+      }
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 

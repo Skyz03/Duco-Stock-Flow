@@ -167,5 +167,5 @@ flowchart TD
 
 ## ❓ Still Open
 
-1. **Duco "Total Box Sales"** — Duco tracks cups by quantity; confirm what "box" means at Sales and whether it derives from *Cup Quantity per Box*.
-2. **Block vs. warn** — should a sale that pushes stock below zero be **blocked**, or only **warned** (red) and allowed? *(Recommended: warn + allow.)*
+1. **Duco "Total Box Sales"** — Duco tracks cups by quantity; confirm what "box" means at Sales and whether it derives from *Cup Quantity per Box*. yes
+2. **Block vs. warn** — should a sale that pushes stock below zero be **blocked**, or only **warned** (red) and allowed? *(Recommended: warn + allow.)* warn
