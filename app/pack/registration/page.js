@@ -7,10 +7,10 @@ export const metadata = {
 };
 
 const fields = [
-  { name: "product_code", label: "Product code (ID)", type: "string", required: true },
-  { name: "product_name", label: "Product name", type: "string", required: true },
+  { name: "product_code", label: "Product code (ID)", type: "string", required: true, placeholder: "e.g. PM-001" },
+  { name: "product_name", label: "Product name", type: "string", required: true, placeholder: "e.g. Premium Kraft Box" },
   { name: "product_pic", label: "Product image", type: "image_url", required: false },
-  { name: "country_of_origin", label: "Country of origin", type: "string", required: true },
+  { name: "country_of_origin", label: "Country of origin", type: "string", required: true, placeholder: "e.g. Nepal" },
 ];
 
 const columns = [

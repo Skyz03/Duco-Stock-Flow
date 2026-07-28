@@ -9,7 +9,7 @@ const tableName = "duco_sales";
 const postSchema = z.object({
   product_code: z.string().min(1),
   product_name: z.string().min(1),
-  product_pic: z.union([z.string().url(), z.literal("")]).optional(),
+  product_pic: z.union([z.string().url(), z.literal(""), z.null()]).optional(),
   country_of_origin: z.string().min(1),
   product_box_qty: z.coerce.number().int().positive(),
   date: z.string().min(1),

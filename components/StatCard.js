@@ -29,7 +29,7 @@ export function StatCard({ title, value, accentColor, description, valueClassNam
         )}
       </div>
       <p
-        className={`mt-4 text-3xl font-bold tracking-tight ${valueClassName || ""}`}
+        className={`mt-3 text-2xl font-bold tracking-tight sm:text-3xl ${valueClassName || ""}`}
         style={valueClassName ? undefined : { color: "var(--app-text)" }}
       >
         {value}

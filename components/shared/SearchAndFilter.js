@@ -16,13 +16,13 @@ export function SearchAndFilter({ search, setSearch, dateFrom, setDateFrom, date
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search code or name…"
+          placeholder="Search… e.g. DC-001 or Classic Cup"
           aria-label="Search entries"
           className="min-h-[44px] w-full rounded-xl border border-zinc-300 bg-white py-2.5 pl-9 pr-3 text-base outline-none focus:ring-2 focus:ring-zinc-300"
         />
       </div>
       <div className="grid grid-cols-2 gap-2 md:flex md:flex-wrap md:items-center">
-        <label className="flex flex-col gap-1 text-xs font-semibold text-zinc-500">
+        <label className="flex flex-col gap-1 text-xs font-semibold text-zinc-700">
           From
           <input
             type="date"
@@ -32,7 +32,7 @@ export function SearchAndFilter({ search, setSearch, dateFrom, setDateFrom, date
             className={dateInputClass}
           />
         </label>
-        <label className="flex flex-col gap-1 text-xs font-semibold text-zinc-500">
+        <label className="flex flex-col gap-1 text-xs font-semibold text-zinc-700">
           To
           <input
             type="date"

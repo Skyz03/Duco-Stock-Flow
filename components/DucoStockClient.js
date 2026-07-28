@@ -52,7 +52,7 @@ const columns = [
     key: "total_damage_pcs",
     header: "Damage (pcs)",
     headerClassName: "text-right",
-    className: "text-right tabular-nums text-red-500",
+    className: "text-right tabular-nums text-red-600",
     hideMobile: true,
   },
   {

@@ -1,15 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f4f7fb;
-  --foreground: #0f172a;
-  --app-bg: #f4f7fb;
+  --background: #ffffff;
+  --foreground: #111111;
+  --app-bg: #f8f9fa;
   --app-surface: #ffffff;
-  --app-surface-muted: #f8fafc;
+  --app-surface-muted: #f4f6f8;
   --app-border: #e2e8f0;
-  --app-text: #0f172a;
-  --app-text-muted: #64748b;
-  --app-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  --app-text: #111111;
+  --app-text-muted: #4b5563;
+  --app-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
 }
 
 @theme inline {
@@ -20,15 +20,15 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #020617;
-    --foreground: #e2e8f0;
-    --app-bg: #020617;
-    --app-surface: #0b1220;
-    --app-surface-muted: #111827;
-    --app-border: #1f2937;
-    --app-text: #e2e8f0;
-    --app-text-muted: #94a3b8;
-    --app-shadow: 0 8px 26px rgba(2, 6, 23, 0.4);
+    --background: #0d0d0d;
+    --foreground: #f0f0f0;
+    --app-bg: #111111;
+    --app-surface: #1a1a1a;
+    --app-surface-muted: #222222;
+    --app-border: #2d2d2d;
+    --app-text: #f0f0f0;
+    --app-text-muted: #a0a0a0;
+    --app-shadow: 0 8px 26px rgba(0, 0, 0, 0.5);
   }
 }
 
@@ -36,8 +36,19 @@ html {
   scroll-behavior: smooth;
 }
 
+input,
+textarea,
+select {
+  color: #111111;
+}
+
+::placeholder {
+  color: #374151;
+  opacity: 1;
+}
+
 body {
-  background: radial-gradient(1200px circle at 0% 0%, #e2f4ec 0%, var(--app-bg) 55%);
+  background-color: var(--app-bg);
   color: var(--app-text);
   font-family: var(--font-inter), "Inter", "Segoe UI", sans-serif;
 }

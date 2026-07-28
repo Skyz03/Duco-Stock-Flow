@@ -26,7 +26,7 @@ export function DataTable({ columns, data, isLoading, onDelete, rowClassName, ha
               <th
                 key={col.key}
                 scope="col"
-                className={`px-4 py-3 text-[11px] font-bold uppercase tracking-[0.1em] text-zinc-500 ${cellVisibility(col)} ${col.headerClassName || ""}`}
+                className={`px-4 py-3 text-[11px] font-bold uppercase tracking-[0.1em] text-zinc-700 ${cellVisibility(col)} ${col.headerClassName || ""}`}
               >
                 {col.header}
               </th>

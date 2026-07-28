@@ -23,10 +23,10 @@ export function DucoDashboardClient() {
 
   return (
     <div>
-      <div className="mb-8 flex flex-col gap-3">
-        <p className="text-sm uppercase tracking-[0.3em] text-zinc-500">Duco Cups</p>
-        <h1 className="text-3xl font-semibold text-zinc-950 md:text-4xl">Dashboard</h1>
-        <p className="max-w-2xl text-zinc-600">
+      <div className="mb-6 md:mb-8 flex flex-col gap-2 md:gap-3">
+        <p className="text-sm uppercase tracking-[0.3em] text-zinc-600">Duco Cups</p>
+        <h1 className="text-2xl font-semibold text-zinc-950 md:text-3xl lg:text-4xl">Dashboard</h1>
+        <p className="max-w-2xl text-sm md:text-base text-zinc-600">
           Summary totals and per-product stock. Lowest net stock appears first in the breakdown table.
         </p>
       </div>
@@ -35,7 +35,7 @@ export function DucoDashboardClient() {
         <p className="mb-4 rounded-xl bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>
       ) : null}
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+      <div className="grid gap-4 grid-cols-2 lg:grid-cols-5">
         <StatCard
           title="Total purchased (pcs)"
           value={isLoading ? "…" : (stats?.total_purchased_pcs ?? 0).toLocaleString()}
@@ -79,15 +79,15 @@ export function DucoDashboardClient() {
       />
 
       <div className="mt-10">
-        <p className="mb-4 text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-400">Quick access</p>
-        <div className="grid gap-4 md:grid-cols-2">
+        <p className="mb-4 text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-600">Quick access</p>
+        <div className="grid gap-3 sm:grid-cols-2 md:gap-4">
           {cards.map((card) => {
             const Icon = card.icon;
             return (
               <Link
                 key={card.href}
                 href={card.href}
-                className="group flex items-start gap-4 rounded-2xl border border-zinc-200 bg-white p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+                className="group flex items-center gap-4 rounded-2xl border border-zinc-200 bg-white p-4 md:p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
               >
                 <div
                   className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-zinc-100 transition-colors duration-200"

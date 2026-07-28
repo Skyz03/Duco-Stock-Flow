@@ -170,6 +170,7 @@ export function EntryForm({ fields, onSubmit, isLoading, stockCheck, packWarning
                   <ProductCodeAutocomplete
                     value={f.value || ""}
                     onChange={f.onChange}
+                    placeholder={field.placeholder}
                     onSelect={(p) => {
                       for (const fd of fields) {
                         if (Object.prototype.hasOwnProperty.call(p, fd.name)) {
@@ -214,6 +215,7 @@ export function EntryForm({ fields, onSubmit, isLoading, stockCheck, packWarning
               type={inputType}
               inputMode={inputMode}
               step={field.type === "integer" ? 1 : undefined}
+              placeholder={field.placeholder}
               disabled={isLoading}
               aria-describedby={errors[field.name] ? errorId : undefined}
               className="mt-2 min-h-[44px] w-full rounded-xl border border-zinc-300 px-3 py-2.5 text-base outline-none focus:ring-2 focus:ring-zinc-300"

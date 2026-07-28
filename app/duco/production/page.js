@@ -7,13 +7,13 @@ export const metadata = {
 };
 
 const fields = [
-  { name: "product_code", label: "Product code", type: "string", required: true, autocompletePath: "/api/duco/products" },
-  { name: "product_name", label: "Product name", type: "string", required: true },
+  { name: "product_code", label: "Product code", type: "string", required: true, autocompletePath: "/api/duco/products", placeholder: "e.g. DC-001" },
+  { name: "product_name", label: "Product name", type: "string", required: true, placeholder: "e.g. Classic White Cup" },
   { name: "product_pic", label: "Product image", type: "image_url", required: false },
-  { name: "country_of_origin", label: "Country of origin", type: "string", required: true },
-  { name: "product_box_used", label: "Cartons used", type: "integer", required: false, min: 0, defaultValue: 0 },
-  { name: "product_pcs_qty", label: "Qty produced (pcs)", type: "integer", required: true, min: 1 },
-  { name: "product_damage_pcs", label: "Qty damage (pcs)", type: "integer", required: false, min: 0, defaultValue: 0 },
+  { name: "country_of_origin", label: "Country of origin", type: "string", required: true, placeholder: "e.g. Nepal" },
+  { name: "product_box_used", label: "Cartons used", type: "integer", required: false, min: 0, defaultValue: 0, placeholder: "e.g. 10" },
+  { name: "product_pcs_qty", label: "Qty produced (pcs)", type: "integer", required: true, min: 1, placeholder: "e.g. 1000" },
+  { name: "product_damage_pcs", label: "Qty damage (pcs)", type: "integer", required: false, min: 0, defaultValue: 0, placeholder: "e.g. 0" },
   { name: "date", label: "Date", type: "date", required: true },
 ];
 

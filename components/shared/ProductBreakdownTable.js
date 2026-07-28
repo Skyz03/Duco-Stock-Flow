@@ -16,8 +16,8 @@ export function ProductBreakdownTable({ title, rows, isLoading, onRefresh, varia
   const isDuco = variant === "duco";
 
   return (
-    <section className="mt-10 overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm">
-      <div className="flex flex-col gap-2 border-b border-zinc-100 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
+    <section className="mt-8 md:mt-10 overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm">
+      <div className="flex flex-col gap-2 border-b border-zinc-100 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-4">
         <h2 className="text-base font-semibold text-zinc-900">{title}</h2>
         <button
           type="button"
@@ -34,23 +34,23 @@ export function ProductBreakdownTable({ title, rows, isLoading, onRefresh, varia
         <table className="min-w-full divide-y divide-zinc-100 text-left text-sm">
           <thead className="bg-zinc-50/80">
             <tr>
-              <th scope="col" className="px-3 py-2.5 text-[11px] font-bold uppercase tracking-[0.08em] text-zinc-500">Image</th>
-              <th scope="col" className="px-3 py-2.5 text-[11px] font-bold uppercase tracking-[0.08em] text-zinc-500">Code</th>
-              <th scope="col" className="px-3 py-2.5 text-[11px] font-bold uppercase tracking-[0.08em] text-zinc-500">Product</th>
+              <th scope="col" className="px-3 py-2.5 text-[11px] font-bold uppercase tracking-[0.08em] text-zinc-700">Image</th>
+              <th scope="col" className="px-3 py-2.5 text-[11px] font-bold uppercase tracking-[0.08em] text-zinc-700">Code</th>
+              <th scope="col" className="px-3 py-2.5 text-[11px] font-bold uppercase tracking-[0.08em] text-zinc-700">Product</th>
               {isDuco ? (
                 <>
-                  <th scope="col" className="px-3 py-2.5 text-right text-[11px] font-bold uppercase tracking-[0.08em] text-zinc-500">Purchased</th>
-                  <th scope="col" className="px-3 py-2.5 text-right text-[11px] font-bold uppercase tracking-[0.08em] text-zinc-500">Produced</th>
-                  <th scope="col" className="px-3 py-2.5 text-right text-[11px] font-bold uppercase tracking-[0.08em] text-zinc-500">Sold</th>
-                  <th scope="col" className="px-3 py-2.5 text-right text-[11px] font-bold uppercase tracking-[0.08em] text-red-400">Damage</th>
-                  <th scope="col" className="px-3 py-2.5 text-right text-[11px] font-bold uppercase tracking-[0.08em] text-zinc-500">Net Stock</th>
+                  <th scope="col" className="hidden md:table-cell px-3 py-2.5 text-right text-[11px] font-bold uppercase tracking-[0.08em] text-zinc-700">Purchased</th>
+                  <th scope="col" className="hidden md:table-cell px-3 py-2.5 text-right text-[11px] font-bold uppercase tracking-[0.08em] text-zinc-700">Produced</th>
+                  <th scope="col" className="hidden md:table-cell px-3 py-2.5 text-right text-[11px] font-bold uppercase tracking-[0.08em] text-zinc-700">Sold</th>
+                  <th scope="col" className="hidden md:table-cell px-3 py-2.5 text-right text-[11px] font-bold uppercase tracking-[0.08em] text-red-600">Damage</th>
+                  <th scope="col" className="px-3 py-2.5 text-right text-[11px] font-bold uppercase tracking-[0.08em] text-zinc-700">Net Stock</th>
                 </>
               ) : (
                 <>
-                  <th scope="col" className="px-3 py-2.5 text-right text-[11px] font-bold uppercase tracking-[0.08em] text-zinc-500">Purchased</th>
-                  <th scope="col" className="px-3 py-2.5 text-right text-[11px] font-bold uppercase tracking-[0.08em] text-zinc-500">Sold</th>
-                  <th scope="col" className="px-3 py-2.5 text-right text-[11px] font-bold uppercase tracking-[0.08em] text-red-400">Damage</th>
-                  <th scope="col" className="px-3 py-2.5 text-right text-[11px] font-bold uppercase tracking-[0.08em] text-zinc-500">Net Stock</th>
+                  <th scope="col" className="hidden md:table-cell px-3 py-2.5 text-right text-[11px] font-bold uppercase tracking-[0.08em] text-zinc-700">Purchased</th>
+                  <th scope="col" className="hidden md:table-cell px-3 py-2.5 text-right text-[11px] font-bold uppercase tracking-[0.08em] text-zinc-700">Sold</th>
+                  <th scope="col" className="hidden md:table-cell px-3 py-2.5 text-right text-[11px] font-bold uppercase tracking-[0.08em] text-red-600">Damage</th>
+                  <th scope="col" className="px-3 py-2.5 text-right text-[11px] font-bold uppercase tracking-[0.08em] text-zinc-700">Net Stock</th>
                 </>
               )}
             </tr>
@@ -94,10 +94,10 @@ export function ProductBreakdownTable({ title, rows, isLoading, onRefresh, varia
                     <td className="px-3 py-2 text-zinc-700">{row.product_name}</td>
                     {isDuco ? (
                       <>
-                        <td className="px-3 py-2 text-right tabular-nums">{row.total_purchased_pcs}</td>
-                        <td className="px-3 py-2 text-right tabular-nums">{row.total_produced_pcs}</td>
-                        <td className="px-3 py-2 text-right tabular-nums">{row.total_sold_pcs}</td>
-                        <td className="px-3 py-2 text-right tabular-nums text-red-500">{row.total_damage_pcs}</td>
+                        <td className="hidden md:table-cell px-3 py-2 text-right tabular-nums">{row.total_purchased_pcs}</td>
+                        <td className="hidden md:table-cell px-3 py-2 text-right tabular-nums">{row.total_produced_pcs}</td>
+                        <td className="hidden md:table-cell px-3 py-2 text-right tabular-nums">{row.total_sold_pcs}</td>
+                        <td className="hidden md:table-cell px-3 py-2 text-right tabular-nums text-red-600">{row.total_damage_pcs}</td>
                         <td
                           className={`px-3 py-2 text-right text-base font-bold tabular-nums ${
                             row.net_stock_pcs <= 0 ? "text-red-600" : "text-emerald-600"
@@ -108,9 +108,9 @@ export function ProductBreakdownTable({ title, rows, isLoading, onRefresh, varia
                       </>
                     ) : (
                       <>
-                        <td className="px-3 py-2 text-right tabular-nums">{row.total_purchased_boxes}</td>
-                        <td className="px-3 py-2 text-right tabular-nums">{row.total_sold_boxes}</td>
-                        <td className="px-3 py-2 text-right tabular-nums">{row.total_damage_boxes}</td>
+                        <td className="hidden md:table-cell px-3 py-2 text-right tabular-nums">{row.total_purchased_boxes}</td>
+                        <td className="hidden md:table-cell px-3 py-2 text-right tabular-nums">{row.total_sold_boxes}</td>
+                        <td className="hidden md:table-cell px-3 py-2 text-right tabular-nums">{row.total_damage_boxes}</td>
                         <td
                           className={`px-3 py-2 text-right text-base font-bold tabular-nums ${
                             row.net_stock_boxes <= 0 ? "text-red-600" : "text-emerald-600"

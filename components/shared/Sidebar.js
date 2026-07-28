@@ -106,7 +106,7 @@ export function MobileTopBar({ companyName, brandColor, backLink }) {
           <Layers className="h-3 w-3" style={{ color: brandColor }} aria-hidden />
         </div>
         <div>
-          <p className="text-[10px] font-bold uppercase leading-none tracking-[0.22em] text-zinc-400">
+          <p className="text-[10px] font-bold uppercase leading-none tracking-[0.22em] text-zinc-600">
             Inventory
           </p>
           <p className="text-sm font-bold leading-snug text-zinc-900">{companyName}</p>
