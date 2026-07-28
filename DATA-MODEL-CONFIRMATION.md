@@ -95,8 +95,6 @@ flowchart TD
     class PACK,P_REG,P_PUR,P_SALE,P_DASH pack;
 ```
 
-> **How to view:** GitHub, VS Code (with a Mermaid extension), and most Markdown previewers render this automatically. You can also paste it into <https://mermaid.live> to export a PNG for the client.
-
 ---
 
 ## 🧮 Formulas
