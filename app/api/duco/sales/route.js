@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { buildListResponse, handleDeleteById } from "../../../../lib/api/entryRouteHelpers";
-import { assertRegistered, getDucoCupQtyPerBox } from "../../../../lib/api/assertRegistered";
+import { assertRegistered } from "../../../../lib/api/assertRegistered";
 import { supabaseServer } from "../../../../lib/supabaseServer";
 
 const tableName = "duco_sales";
@@ -11,7 +11,7 @@ const postSchema = z.object({
   product_name: z.string().min(1),
   product_pic: z.union([z.string().url(), z.literal(""), z.null()]).optional(),
   country_of_origin: z.string().min(1),
-  product_box_qty: z.coerce.number().int().positive(),
+  product_pcs_qty: z.coerce.number().int().positive(),
   date: z.string().min(1),
 });
 
@@ -34,14 +34,10 @@ export async function POST(request) {
     const notRegistered = await assertRegistered(supabaseServer, "duco_products", parsed.data.product_code);
     if (notRegistered) return notRegistered;
 
-    const cup_qty_per_box = await getDucoCupQtyPerBox(supabaseServer, parsed.data.product_code);
-    const product_pcs_qty = parsed.data.product_box_qty * cup_qty_per_box;
-
     const { product_pic, ...rest } = parsed.data;
     const payload = {
       ...rest,
       product_pic: product_pic && product_pic !== "" ? product_pic : null,
-      product_pcs_qty,
     };
 
     const { data, error } = await supabaseServer.from(tableName).insert([payload]).select().single();

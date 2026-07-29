@@ -11,9 +11,7 @@ const fields = [
   { name: "product_name", label: "Product name", type: "string", required: true, placeholder: "e.g. Classic White Cup" },
   { name: "product_pic", label: "Product image", type: "image_url", required: false },
   { name: "country_of_origin", label: "Country of origin", type: "string", required: true, placeholder: "e.g. Nepal" },
-  { name: "product_box_qty", label: "Total box sales", type: "integer", required: true, min: 1, placeholder: "e.g. 20" },
-  // hidden field: populated via autocomplete, used by stock-check warning to derive pcs
-  { name: "cup_qty_per_box", label: "cup_qty_per_box", type: "hidden", defaultValue: 1 },
+  { name: "product_pcs_qty", label: "Total pcs sold", type: "integer", required: true, min: 1, placeholder: "e.g. 2000" },
   { name: "date", label: "Date", type: "date", required: true },
 ];
 
@@ -23,8 +21,7 @@ const columns = [
   { key: "product_name", header: "Product" },
   { key: "product_pic", header: "Image", hideMobile: true },
   { key: "country_of_origin", header: "Origin", hideMobile: true },
-  { key: "product_box_qty", header: "Boxes sold", headerClassName: "text-right", className: "text-right tabular-nums" },
-  { key: "product_pcs_qty", header: "Pcs sold", headerClassName: "text-right", className: "text-right tabular-nums", hideMobile: true },
+  { key: "product_pcs_qty", header: "Pcs sold", headerClassName: "text-right", className: "text-right tabular-nums" },
 ];
 
 export default function DucoSalesPage() {
@@ -40,8 +37,7 @@ export default function DucoSalesPage() {
         stockCheck={{
           apiPath: "/api/duco/stock/check",
           type: "sales",
-          qtyField: "product_box_qty",
-          multiplierField: "cup_qty_per_box",
+          qtyField: "product_pcs_qty",
         }}
       />
     </div>
