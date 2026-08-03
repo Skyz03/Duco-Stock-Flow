@@ -31,7 +31,6 @@ export default function DucoPurchasePage() {
       <EntriesWorkbench
         title="Purchase entries"
         apiPath="/api/duco/purchase"
-        exportPath="/api/duco/purchase/export"
         accentColor={THEME.duco.primary}
         fields={fields}
         columns={columns}

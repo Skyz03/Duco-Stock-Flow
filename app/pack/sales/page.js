@@ -22,6 +22,7 @@ const columns = [
   { key: "product_pic", header: "Image", hideMobile: true },
   { key: "country_of_origin", header: "Origin", hideMobile: true },
   { key: "product_sales_per_box", header: "Boxes sold", headerClassName: "text-right", className: "text-right tabular-nums" },
+  { key: "product_pcs_qty", header: "Qty (pcs)", headerClassName: "text-right", className: "text-right tabular-nums", hideMobile: true },
 ];
 
 export default function PackSalesPage() {
@@ -30,7 +31,6 @@ export default function PackSalesPage() {
       <EntriesWorkbench
         title="Sales entries"
         apiPath="/api/pack/sales"
-        exportPath="/api/pack/sales/export"
         accentColor={THEME.pack.primary}
         fields={fields}
         columns={columns}

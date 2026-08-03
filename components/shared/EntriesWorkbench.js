@@ -1,13 +1,12 @@
 "use client";
 
-import { Plus } from "lucide-react";
+import Image from "next/image";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useEntries } from "../../hooks/useEntries";
 import { ConfirmDeleteDialog } from "./ConfirmDeleteDialog";
 import { DataTable } from "./DataTable";
 import { EntryForm } from "./EntryForm";
-import { ExportCSVButton } from "./ExportCSVButton";
 import { Pagination } from "./Pagination";
 import { SearchAndFilter } from "./SearchAndFilter";
 import { SlideOver } from "./SlideOver";
@@ -15,7 +14,6 @@ import { SlideOver } from "./SlideOver";
 export function EntriesWorkbench({
   title,
   apiPath,
-  exportPath,
   accentColor,
   fields,
   columns,
@@ -29,7 +27,6 @@ export function EntriesWorkbench({
     totalPages,
     search,
     setSearch,
-    effectiveSearch,
     dateFrom,
     setDateFrom,
     dateTo,
@@ -40,11 +37,10 @@ export function EntriesWorkbench({
     refetch,
   } = useEntries(apiPath);
 
-  const [panelOpen, setPanelOpen] = useState(false);
-  const [panelKey, setPanelKey] = useState(0);
   const [deleteId, setDeleteId] = useState(null);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [viewEntry, setViewEntry] = useState(null);
 
   const hasFilters = Boolean(search || dateFrom || dateTo);
 
@@ -65,7 +61,6 @@ export function EntriesWorkbench({
       if (!res.ok) {
         throw new Error(json.error || "Save failed");
       }
-      setPanelOpen(false);
       toast.success("Entry saved");
       await refetch();
     } catch (e) {
@@ -103,43 +98,29 @@ export function EntriesWorkbench({
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-semibold text-zinc-900 md:text-3xl">{title}</h1>
-        <p className="mt-1 text-sm text-zinc-600">Search, export, add, and remove entries.</p>
+        <p className="mt-1 text-sm text-zinc-600">Add and manage entries.</p>
       </div>
 
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-        <div className="min-w-0 flex-1">
-          <SearchAndFilter
-            search={search}
-            setSearch={setSearch}
-            dateFrom={dateFrom}
-            setDateFrom={setDateFrom}
-            dateTo={dateTo}
-            setDateTo={setDateTo}
-          />
-        </div>
-        <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:flex-wrap sm:items-center">
-          <ExportCSVButton
-            exportUrl={exportPath}
-            filename="export.csv"
-            search={effectiveSearch}
-            dateFrom={dateFrom}
-            dateTo={dateTo}
-            className="w-full sm:w-auto"
-          />
-          <button
-            type="button"
-            onClick={() => {
-              setPanelKey((k) => k + 1);
-              setPanelOpen(true);
-            }}
-            className="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-full px-4 py-2.5 text-base font-semibold text-white shadow-sm transition hover:opacity-90 sm:w-auto sm:text-sm"
-            style={{ backgroundColor: accentColor }}
-          >
-            <Plus className="h-4 w-4" aria-hidden />
-            Add entry
-          </button>
-        </div>
+      <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
+        <p className="mb-4 text-sm font-semibold text-zinc-700">New entry</p>
+        <EntryForm
+          fields={fields}
+          onSubmit={handleSubmit}
+          isLoading={saving}
+          stockCheck={stockCheck}
+          packWarning={packWarning}
+          accentColor={accentColor}
+        />
       </div>
+
+      <SearchAndFilter
+        search={search}
+        setSearch={setSearch}
+        dateFrom={dateFrom}
+        setDateFrom={setDateFrom}
+        dateTo={dateTo}
+        setDateTo={setDateTo}
+      />
 
       {error ? (
         <div className="flex items-center justify-between rounded-xl bg-red-50 px-3 py-2 text-sm text-red-700">
@@ -159,6 +140,7 @@ export function EntriesWorkbench({
         data={entries}
         isLoading={isLoading}
         onDelete={(id) => setDeleteId(id)}
+        onView={(row) => setViewEntry(row)}
         hasFilters={hasFilters}
       />
 
@@ -166,18 +148,25 @@ export function EntriesWorkbench({
 
       <p className="text-sm text-zinc-500">{totalCount} entries found</p>
 
-      <SlideOver isOpen={panelOpen} onClose={() => setPanelOpen(false)} title="Add entry">
-        {panelOpen ? (
-          <EntryForm
-            key={panelKey}
-            fields={fields}
-            onSubmit={handleSubmit}
-            isLoading={saving}
-            stockCheck={stockCheck}
-            packWarning={packWarning}
-            accentColor={accentColor}
-          />
-        ) : null}
+      <SlideOver isOpen={viewEntry !== null} onClose={() => setViewEntry(null)} title="Entry details">
+        {viewEntry && (
+          <dl className="divide-y divide-zinc-100">
+            {fields.filter((f) => f.type !== "hidden").map((f) => (
+              <div key={f.name} className="flex flex-col gap-1 py-3">
+                <dt className="text-xs font-medium text-zinc-500">{f.label}</dt>
+                <dd className="text-sm text-zinc-900">
+                  {f.type === "image_url" && viewEntry[f.name] ? (
+                    <Image src={viewEntry[f.name]} alt="" width={96} height={96} className="h-24 w-24 rounded-lg object-cover" />
+                  ) : f.type === "date" && viewEntry[f.name] ? (
+                    new Date(viewEntry[f.name]).toLocaleDateString()
+                  ) : (
+                    viewEntry[f.name] ?? "—"
+                  )}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        )}
       </SlideOver>
 
       <ConfirmDeleteDialog

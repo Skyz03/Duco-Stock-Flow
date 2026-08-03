@@ -34,7 +34,6 @@ export default function DucoProductionPage() {
       <EntriesWorkbench
         title="Production entries"
         apiPath="/api/duco/production"
-        exportPath="/api/duco/production/export"
         accentColor={THEME.duco.primary}
         fields={fields}
         columns={columns}

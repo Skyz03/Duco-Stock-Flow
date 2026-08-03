@@ -18,7 +18,6 @@ const fields = [
   { name: "product_name", label: "Product name", type: "string", required: true, placeholder: "e.g. Premium Kraft Box" },
   { name: "product_pic", label: "Product image", type: "image_url", required: false },
   { name: "product_purchase_per_box", label: "Purchase (boxes)", type: "integer", required: true, min: 0, placeholder: "e.g. 100" },
-  { name: "product_pcs_per_box", label: "Pieces / box", type: "integer", required: true, min: 0, placeholder: "e.g. 24" },
   { name: "product_sales_per_box", label: "Sales (boxes)", type: "integer", required: true, min: 0, placeholder: "e.g. 50" },
   { name: "product_damage_per_box", label: "Damage (boxes)", type: "integer", required: false, min: 0, defaultValue: 0, placeholder: "e.g. 0" },
   { name: "date", label: "Date", type: "date", required: true },
@@ -46,7 +45,6 @@ export default function PackEntriesPage() {
       <EntriesWorkbench
         title="Inventory entries"
         apiPath="/api/pack/inventory"
-        exportPath="/api/pack/inventory/export"
         accentColor={THEME.pack.primary}
         fields={fields}
         columns={columns}
