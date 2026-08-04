@@ -1,7 +1,8 @@
 "use client";
 
-import { AlertTriangle, Boxes, Package, ShoppingBag } from "lucide-react";
+import { AlertTriangle, Boxes, Package, ShoppingBag, X } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 import { useBreakdown } from "../hooks/useBreakdown";
 import { useDashboard } from "../hooks/useDashboard";
 import { THEME } from "../lib/theme";
@@ -18,8 +19,19 @@ const cards = [
 export function PackDashboardClient() {
   const { stats, isLoading, error } = useDashboard("/api/pack/dashboard");
   const breakdown = useBreakdown("/api/pack/dashboard/breakdown");
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
-  const net = stats?.net_stock_boxes ?? 0;
+  const displayStats = selectedProduct
+    ? {
+        total_purchased_boxes: selectedProduct.total_purchased_boxes,
+        total_sold_boxes: selectedProduct.total_sold_boxes,
+        total_damage_boxes: selectedProduct.total_damage_boxes,
+        net_stock_boxes: selectedProduct.net_stock_boxes,
+      }
+    : stats;
+
+  const net = displayStats?.net_stock_boxes ?? 0;
+  const statsLoading = selectedProduct ? false : isLoading;
 
   return (
     <div>
@@ -35,28 +47,44 @@ export function PackDashboardClient() {
         <p className="mb-4 rounded-xl bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>
       ) : null}
 
+      {selectedProduct ? (
+        <div className="mb-4 flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => setSelectedProduct(null)}
+            className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-3 py-1.5 text-sm font-medium text-zinc-600 transition hover:bg-zinc-50"
+          >
+            <X className="h-3.5 w-3.5" aria-hidden />
+            All products
+          </button>
+          <span className="text-sm text-zinc-500">
+            Showing: <span className="font-semibold text-zinc-800">{selectedProduct.product_name} ({selectedProduct.product_code})</span>
+          </span>
+        </div>
+      ) : null}
+
       <div className="grid gap-4 grid-cols-2 md:grid-cols-4">
         <StatCard
           title="Total purchased boxes"
-          value={isLoading ? "…" : (stats?.total_purchased_boxes ?? 0).toLocaleString()}
+          value={statsLoading ? "…" : (displayStats?.total_purchased_boxes ?? 0).toLocaleString()}
           accentColor={THEME.pack.primary}
           icon={Package}
         />
         <StatCard
           title="Total sold boxes"
-          value={isLoading ? "…" : (stats?.total_sold_boxes ?? 0).toLocaleString()}
+          value={statsLoading ? "…" : (displayStats?.total_sold_boxes ?? 0).toLocaleString()}
           accentColor={THEME.pack.primary}
           icon={ShoppingBag}
         />
         <StatCard
           title="Total damage boxes"
-          value={isLoading ? "…" : (stats?.total_damage_boxes ?? 0).toLocaleString()}
+          value={statsLoading ? "…" : (displayStats?.total_damage_boxes ?? 0).toLocaleString()}
           accentColor={THEME.pack.primary}
           icon={AlertTriangle}
         />
         <StatCard
           title="Net stock boxes"
-          value={isLoading ? "…" : net.toLocaleString()}
+          value={statsLoading ? "…" : net.toLocaleString()}
           accentColor={net <= 0 ? THEME.danger : THEME.pack.primary}
           valueClassName={net <= 0 ? "text-red-600" : "text-emerald-600"}
           icon={Boxes}
@@ -70,6 +98,8 @@ export function PackDashboardClient() {
         isLoading={breakdown.isLoading}
         onRefresh={breakdown.refetch}
         accentColor={THEME.pack.primary}
+        onRowClick={setSelectedProduct}
+        selectedCode={selectedProduct?.product_code}
       />
 
       <div className="mt-10">

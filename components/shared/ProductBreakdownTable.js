@@ -12,7 +12,7 @@ function isAbsoluteUrl(url) {
   }
 }
 
-export function ProductBreakdownTable({ title, rows, isLoading, onRefresh, variant, accentColor }) {
+export function ProductBreakdownTable({ title, rows, isLoading, onRefresh, variant, accentColor, onRowClick, selectedCode }) {
   const isDuco = variant === "duco";
 
   return (
@@ -34,23 +34,23 @@ export function ProductBreakdownTable({ title, rows, isLoading, onRefresh, varia
         <table className="min-w-full divide-y divide-zinc-100 text-left text-sm">
           <thead className="bg-zinc-50/80">
             <tr>
-              <th scope="col" className="px-3 py-2.5 text-[11px] font-bold uppercase tracking-[0.08em] text-zinc-700">Image</th>
-              <th scope="col" className="px-3 py-2.5 text-[11px] font-bold uppercase tracking-[0.08em] text-zinc-700">Code</th>
-              <th scope="col" className="px-3 py-2.5 text-[11px] font-bold uppercase tracking-[0.08em] text-zinc-700">Product</th>
+              <th scope="col" className="px-3 py-2.5 text-[11px] font-bold uppercase tracking-[0.08em] text-zinc-950">Image</th>
+              <th scope="col" className="px-3 py-2.5 text-[11px] font-bold uppercase tracking-[0.08em] text-zinc-950">Code</th>
+              <th scope="col" className="px-3 py-2.5 text-[11px] font-bold uppercase tracking-[0.08em] text-zinc-950">Product</th>
               {isDuco ? (
                 <>
-                  <th scope="col" className="hidden md:table-cell px-3 py-2.5 text-right text-[11px] font-bold uppercase tracking-[0.08em] text-zinc-700">Purchased</th>
-                  <th scope="col" className="hidden md:table-cell px-3 py-2.5 text-right text-[11px] font-bold uppercase tracking-[0.08em] text-zinc-700">Produced</th>
-                  <th scope="col" className="hidden md:table-cell px-3 py-2.5 text-right text-[11px] font-bold uppercase tracking-[0.08em] text-zinc-700">Sold</th>
-                  <th scope="col" className="hidden md:table-cell px-3 py-2.5 text-right text-[11px] font-bold uppercase tracking-[0.08em] text-red-600">Damage</th>
-                  <th scope="col" className="px-3 py-2.5 text-right text-[11px] font-bold uppercase tracking-[0.08em] text-zinc-700">Net Stock</th>
+                  <th scope="col" className="hidden md:table-cell px-3 py-2.5 text-right text-[11px] font-bold uppercase tracking-[0.08em] text-zinc-950">Purchased</th>
+                  <th scope="col" className="hidden md:table-cell px-3 py-2.5 text-right text-[11px] font-bold uppercase tracking-[0.08em] text-zinc-950">Produced</th>
+                  <th scope="col" className="hidden md:table-cell px-3 py-2.5 text-right text-[11px] font-bold uppercase tracking-[0.08em] text-zinc-950">Sold</th>
+                  <th scope="col" className="hidden md:table-cell px-3 py-2.5 text-right text-[11px] font-bold uppercase tracking-[0.08em] text-zinc-950">Damage</th>
+                  <th scope="col" className="px-3 py-2.5 text-right text-[11px] font-bold uppercase tracking-[0.08em] text-zinc-950">Net Stock</th>
                 </>
               ) : (
                 <>
-                  <th scope="col" className="hidden md:table-cell px-3 py-2.5 text-right text-[11px] font-bold uppercase tracking-[0.08em] text-zinc-700">Purchased</th>
-                  <th scope="col" className="hidden md:table-cell px-3 py-2.5 text-right text-[11px] font-bold uppercase tracking-[0.08em] text-zinc-700">Sold</th>
-                  <th scope="col" className="hidden md:table-cell px-3 py-2.5 text-right text-[11px] font-bold uppercase tracking-[0.08em] text-red-600">Damage</th>
-                  <th scope="col" className="px-3 py-2.5 text-right text-[11px] font-bold uppercase tracking-[0.08em] text-zinc-700">Net Stock</th>
+                  <th scope="col" className="hidden md:table-cell px-3 py-2.5 text-right text-[11px] font-bold uppercase tracking-[0.08em] text-zinc-950">Purchased</th>
+                  <th scope="col" className="hidden md:table-cell px-3 py-2.5 text-right text-[11px] font-bold uppercase tracking-[0.08em] text-zinc-950">Sold</th>
+                  <th scope="col" className="hidden md:table-cell px-3 py-2.5 text-right text-[11px] font-bold uppercase tracking-[0.08em] text-zinc-950">Damage</th>
+                  <th scope="col" className="px-3 py-2.5 text-right text-[11px] font-bold uppercase tracking-[0.08em] text-zinc-950">Net Stock</th>
                 </>
               )}
             </tr>
@@ -75,8 +75,20 @@ export function ProductBreakdownTable({ title, rows, isLoading, onRefresh, varia
             {!isLoading &&
               rows.map((row) => {
                 const low = row.is_low_stock;
+                const isSelected = selectedCode === row.product_code;
                 return (
-                  <tr key={row.product_code} className={low ? "bg-red-50" : "transition-colors hover:bg-zinc-50/60"}>
+                  <tr
+                    key={row.product_code}
+                    onClick={onRowClick ? () => onRowClick(row) : undefined}
+                    className={
+                      isSelected
+                        ? "bg-blue-50 ring-inset ring-1 ring-blue-200"
+                        : low
+                        ? "bg-red-50"
+                        : "transition-colors hover:bg-zinc-50/60"
+                    }
+                    style={onRowClick ? { cursor: "pointer" } : undefined}
+                  >
                     <td className="px-3 py-2.5">
                       {row.product_pic && isAbsoluteUrl(row.product_pic) ? (
                         <Image
@@ -90,32 +102,24 @@ export function ProductBreakdownTable({ title, rows, isLoading, onRefresh, varia
                         <span className="inline-block h-9 w-9 rounded-md bg-zinc-100" />
                       )}
                     </td>
-                    <td className="px-3 py-2 font-mono text-xs text-zinc-900">{row.product_code}</td>
-                    <td className="px-3 py-2 text-zinc-700">{row.product_name}</td>
+                    <td className="px-3 py-2 font-mono text-xs text-zinc-950">{row.product_code}</td>
+                    <td className="px-3 py-2 text-zinc-950">{row.product_name}</td>
                     {isDuco ? (
                       <>
-                        <td className="hidden md:table-cell px-3 py-2 text-right tabular-nums">{row.total_purchased_pcs}</td>
-                        <td className="hidden md:table-cell px-3 py-2 text-right tabular-nums">{row.total_produced_pcs}</td>
-                        <td className="hidden md:table-cell px-3 py-2 text-right tabular-nums">{row.total_sold_pcs}</td>
-                        <td className="hidden md:table-cell px-3 py-2 text-right tabular-nums text-red-600">{row.total_damage_pcs}</td>
-                        <td
-                          className={`px-3 py-2 text-right text-base font-bold tabular-nums ${
-                            row.net_stock_pcs <= 0 ? "text-red-600" : "text-emerald-600"
-                          }`}
-                        >
+                        <td className="hidden md:table-cell px-3 py-2 text-right tabular-nums text-zinc-950">{row.total_purchased_pcs}</td>
+                        <td className="hidden md:table-cell px-3 py-2 text-right tabular-nums text-zinc-950">{row.total_produced_pcs}</td>
+                        <td className="hidden md:table-cell px-3 py-2 text-right tabular-nums text-zinc-950">{row.total_sold_pcs}</td>
+                        <td className="hidden md:table-cell px-3 py-2 text-right tabular-nums text-zinc-950">{row.total_damage_pcs}</td>
+                        <td className="px-3 py-2 text-right text-base font-bold tabular-nums text-zinc-950">
                           {row.net_stock_pcs}
                         </td>
                       </>
                     ) : (
                       <>
-                        <td className="hidden md:table-cell px-3 py-2 text-right tabular-nums">{row.total_purchased_boxes}</td>
-                        <td className="hidden md:table-cell px-3 py-2 text-right tabular-nums">{row.total_sold_boxes}</td>
-                        <td className="hidden md:table-cell px-3 py-2 text-right tabular-nums">{row.total_damage_boxes}</td>
-                        <td
-                          className={`px-3 py-2 text-right text-base font-bold tabular-nums ${
-                            row.net_stock_boxes <= 0 ? "text-red-600" : "text-emerald-600"
-                          }`}
-                        >
+                        <td className="hidden md:table-cell px-3 py-2 text-right tabular-nums text-zinc-950">{row.total_purchased_boxes}</td>
+                        <td className="hidden md:table-cell px-3 py-2 text-right tabular-nums text-zinc-950">{row.total_sold_boxes}</td>
+                        <td className="hidden md:table-cell px-3 py-2 text-right tabular-nums text-zinc-950">{row.total_damage_boxes}</td>
+                        <td className="px-3 py-2 text-right text-base font-bold tabular-nums text-zinc-950">
                           {row.net_stock_boxes}
                         </td>
                       </>
