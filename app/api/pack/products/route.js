@@ -8,7 +8,7 @@ export async function GET(request) {
 
     let query = supabaseServer
       .from("pack_products")
-      .select("product_code, product_name, product_pic, country_of_origin, created_at")
+      .select("product_code, product_name, product_pic, country_of_origin, pcs_per_box, created_at")
       .order("created_at", { ascending: false });
 
     if (q) {

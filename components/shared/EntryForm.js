@@ -172,11 +172,6 @@ export function EntryForm({ fields, onSubmit, isLoading, stockCheck, packWarning
                     onChange={f.onChange}
                     placeholder={field.placeholder}
                     onSelect={(p) => {
-                      for (const fd of fields) {
-                        if (Object.prototype.hasOwnProperty.call(p, fd.name)) {
-                          setValue(fd.name, p[fd.name] ?? (fd.type === "integer" || fd.type === "hidden" ? 0 : ""));
-                        }
-                      }
                       setValue("product_code", p.product_code);
                       setValue("product_name", p.product_name ?? "");
                     }}

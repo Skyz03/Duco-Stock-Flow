@@ -22,6 +22,7 @@ const columns = [
   { key: "product_pic", header: "Image", hideMobile: true },
   { key: "country_of_origin", header: "Origin", hideMobile: true },
   { key: "product_damage_per_box", header: "Boxes damaged", headerClassName: "text-right", className: "text-right tabular-nums text-red-500" },
+  { key: "product_pcs_qty", header: "Qty (pcs)", headerClassName: "text-right", className: "text-right tabular-nums text-red-500", hideMobile: true },
 ];
 
 export default function PackDamagePage() {
@@ -30,7 +31,6 @@ export default function PackDamagePage() {
       <EntriesWorkbench
         title="Damage entries"
         apiPath="/api/pack/damage"
-        exportPath="/api/pack/damage/export"
         accentColor={THEME.pack.primary}
         fields={fields}
         columns={columns}

@@ -10,6 +10,7 @@ const postSchema = z.object({
   product_name: z.string().min(1),
   product_pic: z.union([z.string().url(), z.literal(""), z.null()]).optional(),
   country_of_origin: z.string().min(1),
+  pcs_per_box: z.coerce.number().int().positive(),
 });
 
 export async function GET(request) {

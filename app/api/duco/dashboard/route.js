@@ -19,7 +19,7 @@ export async function GET() {
     const total_damage_pcs = sumRows(production.data, "product_damage_pcs");
     const total_sold_pcs = sumRows(sales.data, "product_pcs_qty");
 
-    const net_stock_pcs = total_purchased_pcs + total_produced_pcs - total_sold_pcs - total_damage_pcs;
+    const net_stock_pcs = total_purchased_pcs - total_produced_pcs - total_damage_pcs;
 
     return NextResponse.json({
       total_purchased_pcs,

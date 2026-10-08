@@ -5,7 +5,7 @@ import { supabaseServer } from "../../../../../lib/supabaseServer";
 
 const exportFields = [
   "id", "product_code", "product_name", "country_of_origin",
-  "product_sales_per_box", "date", "created_at",
+  "product_sales_per_box", "product_pcs_qty", "date", "created_at",
 ];
 
 export async function GET(request) {

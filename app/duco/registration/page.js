@@ -28,7 +28,6 @@ export default function DucoRegistrationPage() {
       <EntriesWorkbench
         title="Product registration"
         apiPath="/api/duco/registration"
-        exportPath="/api/duco/registration/export"
         accentColor={THEME.duco.primary}
         fields={fields}
         columns={columns}

@@ -11,8 +11,7 @@ const fields = [
   { name: "product_name", label: "Product name", type: "string", required: true, placeholder: "e.g. Premium Kraft Box" },
   { name: "product_pic", label: "Product image", type: "image_url", required: false },
   { name: "country_of_origin", label: "Country of origin", type: "string", required: true, placeholder: "e.g. Nepal" },
-  { name: "product_purchase_per_box", label: "Total box purchase", type: "integer", required: true, min: 0, placeholder: "e.g. 100" },
-  { name: "product_pcs_per_box", label: "Qty per box", type: "integer", required: true, min: 0, placeholder: "e.g. 24" },
+  { name: "product_purchase_per_box", label: "Total boxes purchased", type: "integer", required: true, min: 0, placeholder: "e.g. 100" },
   { name: "date", label: "Date", type: "date", required: true },
 ];
 
@@ -23,7 +22,8 @@ const columns = [
   { key: "product_pic", header: "Image", hideMobile: true },
   { key: "country_of_origin", header: "Origin", hideMobile: true },
   { key: "product_purchase_per_box", header: "Boxes", headerClassName: "text-right", className: "text-right tabular-nums" },
-  { key: "product_pcs_per_box", header: "Qty/box", headerClassName: "text-right", className: "text-right tabular-nums", hideMobile: true },
+  { key: "product_pcs_per_box", header: "Pcs/box", headerClassName: "text-right", className: "text-right tabular-nums", hideMobile: true },
+  { key: "product_pcs_qty", header: "Qty (pcs)", headerClassName: "text-right", className: "text-right tabular-nums" },
 ];
 
 export default function PackPurchasePage() {
@@ -32,7 +32,6 @@ export default function PackPurchasePage() {
       <EntriesWorkbench
         title="Purchase entries"
         apiPath="/api/pack/purchase"
-        exportPath="/api/pack/purchase/export"
         accentColor={THEME.pack.primary}
         fields={fields}
         columns={columns}

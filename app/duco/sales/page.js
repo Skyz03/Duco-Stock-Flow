@@ -30,7 +30,6 @@ export default function DucoSalesPage() {
       <EntriesWorkbench
         title="Sales entries"
         apiPath="/api/duco/sales"
-        exportPath="/api/duco/sales/export"
         accentColor={THEME.duco.primary}
         fields={fields}
         columns={columns}

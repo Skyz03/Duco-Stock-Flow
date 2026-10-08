@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { buildListResponse, handleDeleteById } from "../../../../lib/api/entryRouteHelpers";
-import { assertRegistered } from "../../../../lib/api/assertRegistered";
+import { assertRegistered, getPackPcsPerBox } from "../../../../lib/api/assertRegistered";
 import { supabaseServer } from "../../../../lib/supabaseServer";
 
 const tableName = "pack_damage";
@@ -34,8 +34,11 @@ export async function POST(request) {
     const notRegistered = await assertRegistered(supabaseServer, "pack_products", parsed.data.product_code);
     if (notRegistered) return notRegistered;
 
+    const pcs_per_box = await getPackPcsPerBox(supabaseServer, parsed.data.product_code);
+    const product_pcs_qty = parsed.data.product_damage_per_box * pcs_per_box;
+
     const { product_pic, ...rest } = parsed.data;
-    const payload = { ...rest, product_pic: product_pic && product_pic !== "" ? product_pic : null };
+    const payload = { ...rest, product_pic: product_pic && product_pic !== "" ? product_pic : null, product_pcs_qty };
 
     const { data, error } = await supabaseServer.from(tableName).insert([payload]).select().single();
     if (error) {
