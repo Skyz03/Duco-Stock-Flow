@@ -202,6 +202,7 @@ export function EntryForm({ fields, onSubmit, isLoading, stockCheck, packWarning
         const inputType = field.type === "date" ? "date" : "text";
         const inputMode = field.type === "integer" ? "numeric" : undefined;
         const errorId = `${field.name}-error`;
+        const listId = field.suggestions?.length ? `${field.name}-list` : undefined;
         return (
           <label key={field.name} className="block text-sm">
             <span className="font-medium text-zinc-800">{field.label}</span>
@@ -211,10 +212,16 @@ export function EntryForm({ fields, onSubmit, isLoading, stockCheck, packWarning
               inputMode={inputMode}
               placeholder={field.placeholder}
               disabled={isLoading}
+              list={listId}
               aria-describedby={errors[field.name] ? errorId : undefined}
               className="mt-2 min-h-[44px] w-full rounded-xl border border-zinc-300 px-3 py-2.5 text-base outline-none focus:ring-2 focus:ring-zinc-300"
               {...register(field.name)}
             />
+            {listId && (
+              <datalist id={listId}>
+                {field.suggestions.map((s) => <option key={s} value={s} />)}
+              </datalist>
+            )}
             {errors[field.name] ? (
               <p id={errorId} className="mt-1 text-xs text-red-600" role="alert">
                 {errors[field.name].message}

@@ -1,5 +1,6 @@
 import { EntriesWorkbench } from "../../../components/shared/EntriesWorkbench";
 import { THEME } from "../../../lib/theme";
+import { COUNTRY_SUGGESTIONS } from "../../../lib/countries";
 
 export const metadata = {
   title: "Purchase — Packmandu",
@@ -10,7 +11,7 @@ const fields = [
   { name: "product_code", label: "Product code", type: "string", required: true, autocompletePath: "/api/pack/products", placeholder: "e.g. PM-001" },
   { name: "product_name", label: "Product name", type: "string", required: true, placeholder: "e.g. Premium Kraft Box" },
   { name: "product_pic", label: "Product image", type: "image_url", required: false },
-  { name: "country_of_origin", label: "Country of origin", type: "string", required: true, placeholder: "e.g. Nepal" },
+  { name: "country_of_origin", label: "Country of origin", type: "string", required: true, placeholder: "e.g. Nepal", suggestions: COUNTRY_SUGGESTIONS },
   { name: "product_purchase_per_box", label: "Total boxes purchased", type: "integer", required: true, min: 0, placeholder: "e.g. 100" },
   { name: "date", label: "Date", type: "date", required: true },
 ];

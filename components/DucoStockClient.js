@@ -42,13 +42,6 @@ const columns = [
     hideMobile: true,
   },
   {
-    key: "total_sold_pcs",
-    header: "Sold (pcs)",
-    headerClassName: "text-right",
-    className: "text-right tabular-nums",
-    hideMobile: true,
-  },
-  {
     key: "total_damage_pcs",
     header: "Damage (pcs)",
     headerClassName: "text-right",
@@ -84,7 +77,7 @@ export function DucoStockClient() {
           <p className="text-sm uppercase tracking-[0.3em] text-zinc-500">Duco Cups</p>
           <h1 className="mt-1 text-2xl font-semibold text-zinc-900 md:text-3xl">Stock by product</h1>
           <p className="mt-1 text-sm text-zinc-600">
-            Net pieces from purchases, production, sales, and damage.
+            Net fans = purchased pcs − (produced pcs + damaged pcs).
           </p>
         </div>
         <button

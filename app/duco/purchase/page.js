@@ -1,5 +1,6 @@
 import { EntriesWorkbench } from "../../../components/shared/EntriesWorkbench";
 import { THEME } from "../../../lib/theme";
+import { COUNTRY_SUGGESTIONS } from "../../../lib/countries";
 
 export const metadata = {
   title: "Purchase Entries — Duco Cups",
@@ -10,7 +11,7 @@ const fields = [
   { name: "product_code", label: "Product code", type: "string", required: true, autocompletePath: "/api/duco/products", placeholder: "e.g. DC-001" },
   { name: "product_name", label: "Product name", type: "string", required: true, placeholder: "e.g. Classic White Cup" },
   { name: "product_pic", label: "Product image", type: "image_url", required: false },
-  { name: "country_of_origin", label: "Country of origin", type: "string", required: true, placeholder: "e.g. Nepal" },
+  { name: "country_of_origin", label: "Country of origin", type: "string", required: true, placeholder: "e.g. Nepal", suggestions: COUNTRY_SUGGESTIONS },
   { name: "product_box_qty", label: "Total cartons", type: "integer", required: true, min: 1, placeholder: "e.g. 50" },
   { name: "date", label: "Date", type: "date", required: true },
 ];
