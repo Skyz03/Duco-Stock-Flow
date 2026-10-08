@@ -96,10 +96,12 @@ export function EntriesWorkbench({
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold text-zinc-900 md:text-3xl">{title}</h1>
-        <p className="mt-1 text-sm text-zinc-600">Add and manage entries.</p>
-      </div>
+      {title ? (
+        <div>
+          <h1 className="text-2xl font-semibold text-zinc-900 md:text-3xl">{title}</h1>
+          <p className="mt-1 text-sm text-zinc-600">Add and manage entries.</p>
+        </div>
+      ) : null}
 
       <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
         <p className="mb-4 text-sm font-semibold text-zinc-700">New entry</p>

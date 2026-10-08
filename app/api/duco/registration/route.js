@@ -10,6 +10,10 @@ const postSchema = z.object({
   product_name: z.string().min(1),
   product_pic: z.union([z.string().url(), z.literal(""), z.null()]).optional(),
   country_of_origin: z.string().min(1),
+});
+
+const patchSchema = z.object({
+  product_code: z.string().min(1),
   cup_qty_per_box: z.coerce.number().int().positive(),
 });
 
@@ -69,6 +73,28 @@ export async function POST(request) {
     }
 
     return NextResponse.json({ data }, { status: 201 });
+  } catch (e) {
+    return NextResponse.json({ error: e instanceof Error ? e.message : "Unexpected error" }, { status: 500 });
+  }
+}
+
+export async function PATCH(request) {
+  try {
+    const body = await request.json();
+    const parsed = patchSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json({ error: "Validation failed", issues: parsed.error.issues }, { status: 400 });
+    }
+    const { product_code, cup_qty_per_box } = parsed.data;
+    const { data, error } = await supabaseServer
+      .from(tableName)
+      .update({ cup_qty_per_box })
+      .eq("product_code", product_code)
+      .select()
+      .maybeSingle();
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    if (!data) return NextResponse.json({ error: `Product "${product_code}" not found.` }, { status: 404 });
+    return NextResponse.json({ data });
   } catch (e) {
     return NextResponse.json({ error: e instanceof Error ? e.message : "Unexpected error" }, { status: 500 });
   }
