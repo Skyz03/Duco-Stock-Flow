@@ -29,18 +29,12 @@ export function ProductCodeAutocomplete({ value, onChange, onSelect, apiPath, di
   useEffect(() => {
     let cancelled = false;
     async function run() {
-      if (!debounced || debounced.length < 1) {
-        setItems([]);
-        return;
-      }
       setLoading(true);
       try {
-        const res = await fetch(`${apiPath}?q=${encodeURIComponent(debounced)}`, { cache: "no-store" });
+        const q = debounced ?? "";
+        const res = await fetch(`${apiPath}?q=${encodeURIComponent(q)}`, { cache: "no-store" });
         const json = await res.json();
-        if (!cancelled) {
-          setItems(Array.isArray(json) ? json : []);
-          setOpen(true);
-        }
+        if (!cancelled) setItems(Array.isArray(json) ? json : []);
       } catch {
         if (!cancelled) setItems([]);
       } finally {
@@ -48,9 +42,7 @@ export function ProductCodeAutocomplete({ value, onChange, onSelect, apiPath, di
       }
     }
     run();
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, [debounced, apiPath]);
 
   return (
@@ -58,48 +50,60 @@ export function ProductCodeAutocomplete({ value, onChange, onSelect, apiPath, di
       <input
         value={value}
         disabled={disabled}
-        onChange={(e) => {
-          onChange(e.target.value);
-          setOpen(true);
-        }}
-        onFocus={() => value && setOpen(true)}
-        placeholder={placeholder || "Product code"}
+        onChange={(e) => { onChange(e.target.value); setOpen(true); }}
+        onFocus={() => setOpen(true)}
+        placeholder={placeholder || "Search product code…"}
         className="mt-2 min-h-[44px] w-full rounded-xl border border-zinc-300 px-3 py-2.5 text-base outline-none focus:ring-2 focus:ring-zinc-300"
       />
-      {loading ? <p className="mt-1 text-xs text-zinc-500">Searching…</p> : null}
+
       {open && (
-        <ul className="absolute z-20 mt-1 max-h-56 w-full overflow-auto rounded-xl border border-zinc-200 bg-white py-1 text-base shadow-lg">
-          {!items.length ? (
-            <li className="px-3 py-3 text-zinc-500">No products found</li>
+        <div className="absolute z-20 mt-1 w-full rounded-2xl border border-zinc-200 bg-white shadow-xl overflow-hidden">
+          {loading ? (
+            <div className="flex items-center gap-2 px-4 py-3 text-sm text-zinc-400">
+              <span className="h-3 w-3 animate-spin rounded-full border-2 border-zinc-300 border-t-zinc-500" />
+              Searching…
+            </div>
+          ) : !items.length ? (
+            <div className="px-4 py-3 text-sm text-zinc-400">No products found</div>
           ) : (
-            items.map((p) => (
-              <li key={p.product_code}>
-                <button
-                  type="button"
-                  className="flex min-h-[44px] w-full items-center gap-3 px-3 py-3 text-left hover:bg-zinc-50 active:bg-zinc-100"
-                  onClick={() => {
-                    onSelect(p);
-                    setOpen(false);
-                  }}
-                >
-                  {p.product_pic ? (
-                    <Image
-                      src={p.product_pic}
-                      alt={p.product_name || "Product"}
-                      width={24}
-                      height={24}
-                      className="rounded object-cover"
-                    />
-                  ) : (
-                    <span className="h-6 w-6 rounded bg-zinc-100" />
-                  )}
-                  <span className="font-mono text-xs text-zinc-900">{p.product_code}</span>
-                  <span className="truncate text-zinc-600">{p.product_name}</span>
-                </button>
-              </li>
-            ))
+            <>
+              <p className="px-4 pt-2 pb-1 text-[11px] font-semibold uppercase tracking-widest text-zinc-400">
+                {value ? "Matching products" : "All products"}
+              </p>
+              <ul className="max-h-60 overflow-auto py-1">
+                {items.map((p) => (
+                  <li key={p.product_code}>
+                    <button
+                      type="button"
+                      onClick={() => { onSelect(p); setOpen(false); }}
+                      className="flex min-h-[48px] w-full items-center gap-3 px-4 py-2 text-left transition-colors hover:bg-zinc-50 active:bg-zinc-100"
+                    >
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-zinc-100 overflow-hidden">
+                        {p.product_pic ? (
+                          <Image
+                            src={p.product_pic}
+                            alt={p.product_name || "Product"}
+                            width={32}
+                            height={32}
+                            className="h-8 w-8 rounded-lg object-cover"
+                          />
+                        ) : (
+                          <span className="text-xs font-bold text-zinc-400">
+                            {(p.product_code || "?")[0].toUpperCase()}
+                          </span>
+                        )}
+                      </span>
+                      <span className="flex flex-col min-w-0">
+                        <span className="font-mono text-xs font-semibold text-zinc-800">{p.product_code}</span>
+                        <span className="truncate text-xs text-zinc-500">{p.product_name}</span>
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </>
           )}
-        </ul>
+        </div>
       )}
     </div>
   );
