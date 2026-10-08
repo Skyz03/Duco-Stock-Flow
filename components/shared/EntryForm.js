@@ -199,7 +199,7 @@ export function EntryForm({ fields, onSubmit, isLoading, stockCheck, packWarning
           );
         }
 
-        const inputType = field.type === "integer" ? "number" : field.type === "date" ? "date" : "text";
+        const inputType = field.type === "date" ? "date" : "text";
         const inputMode = field.type === "integer" ? "numeric" : undefined;
         const errorId = `${field.name}-error`;
         return (
@@ -209,7 +209,6 @@ export function EntryForm({ fields, onSubmit, isLoading, stockCheck, packWarning
               id={field.name}
               type={inputType}
               inputMode={inputMode}
-              step={field.type === "integer" ? 1 : undefined}
               placeholder={field.placeholder}
               disabled={isLoading}
               aria-describedby={errors[field.name] ? errorId : undefined}
