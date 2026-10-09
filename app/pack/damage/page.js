@@ -8,8 +8,8 @@ export const metadata = {
 };
 
 const fields = [
-  { name: "product_code", label: "Product code", type: "string", required: true, autocompletePath: "/api/pack/products", placeholder: "e.g. PM-001" },
-  { name: "product_name", label: "Product name", type: "string", required: true, placeholder: "e.g. Premium Kraft Box" },
+  { name: "product_name", label: "Product name", type: "string", required: true, autocompletePath: "/api/pack/products", placeholder: "e.g. Premium Kraft Box" },
+  { name: "product_code", label: "Product code", type: "string", required: true, placeholder: "e.g. PM-001" },
   { name: "product_pic", label: "Product image", type: "image_url", required: false },
   { name: "country_of_origin", label: "Country of origin", type: "string", required: true, placeholder: "e.g. Nepal", suggestions: COUNTRY_SUGGESTIONS },
   { name: "product_damage_per_box", label: "Boxes damaged", type: "integer", required: true, min: 0, placeholder: "e.g. 5" },

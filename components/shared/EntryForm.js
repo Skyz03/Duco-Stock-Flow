@@ -159,7 +159,7 @@ export function EntryForm({ fields, onSubmit, isLoading, stockCheck, packWarning
           return <input key={field.name} type="hidden" {...register(field.name)} />;
         }
 
-        if (field.autocompletePath && field.name === "product_code") {
+        if (field.autocompletePath && field.name === "product_name") {
           return (
             <div key={field.name} className="block text-sm">
               <span className="font-medium text-zinc-800">{field.label}</span>
@@ -172,8 +172,10 @@ export function EntryForm({ fields, onSubmit, isLoading, stockCheck, packWarning
                     onChange={f.onChange}
                     placeholder={field.placeholder}
                     onSelect={(p) => {
-                      setValue("product_code", p.product_code);
+                      setValue("product_code", p.product_code ?? "");
                       setValue("product_name", p.product_name ?? "");
+                      if (p.product_pic !== undefined) setValue("product_pic", p.product_pic ?? "");
+                      if (p.country_of_origin !== undefined) setValue("country_of_origin", p.country_of_origin ?? "");
                     }}
                     apiPath={field.autocompletePath}
                     disabled={isLoading}

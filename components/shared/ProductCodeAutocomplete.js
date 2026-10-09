@@ -52,7 +52,7 @@ export function ProductCodeAutocomplete({ value, onChange, onSelect, apiPath, di
         disabled={disabled}
         onChange={(e) => { onChange(e.target.value); setOpen(true); }}
         onFocus={() => setOpen(true)}
-        placeholder={placeholder || "Search product code…"}
+        placeholder={placeholder || "Search product name…"}
         className="mt-2 min-h-[44px] w-full rounded-xl border border-zinc-300 px-3 py-2.5 text-base outline-none focus:ring-2 focus:ring-zinc-300"
       />
 
@@ -94,8 +94,8 @@ export function ProductCodeAutocomplete({ value, onChange, onSelect, apiPath, di
                         )}
                       </span>
                       <span className="flex flex-col min-w-0">
-                        <span className="font-mono text-xs font-semibold text-zinc-800">{p.product_code}</span>
-                        <span className="truncate text-xs text-zinc-500">{p.product_name}</span>
+                        <span className="truncate text-sm font-semibold text-zinc-800">{p.product_name}</span>
+                        <span className="font-mono text-xs text-zinc-500">{p.product_code}</span>
                       </span>
                     </button>
                   </li>
