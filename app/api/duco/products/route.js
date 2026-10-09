@@ -9,13 +9,13 @@ export async function GET(request) {
     let query = supabaseServer
       .from("duco_products")
       .select("product_code, product_name, product_pic, country_of_origin, cup_qty_per_box, created_at")
-      .order("created_at", { ascending: false });
+      .order("product_name", { ascending: true });
 
     if (q) {
-      query = query.or(`product_code.ilike.%${q}%,product_name.ilike.%${q}%`);
+      query = query.or(`product_code.ilike.%${q}%,product_name.ilike.%${q}%`).limit(20);
     }
 
-    const { data, error } = await query.limit(10);
+    const { data, error } = await query;
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }

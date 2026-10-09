@@ -16,7 +16,7 @@ export function SearchAndFilter({ search, setSearch, dateFrom, setDateFrom, date
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search… e.g. DC-001 or Classic Cup"
+          placeholder="Search by product name…"
           aria-label="Search entries"
           className="min-h-[44px] w-full rounded-xl border border-zinc-300 bg-white py-2.5 pl-9 pr-3 text-base outline-none focus:ring-2 focus:ring-zinc-300"
         />
