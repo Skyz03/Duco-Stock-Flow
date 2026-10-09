@@ -35,14 +35,12 @@ export async function POST(request) {
     if (notRegistered) return notRegistered;
 
     const pcs_per_box = await getPackPcsPerBox(supabaseServer, parsed.data.product_code);
-    const product_pcs_qty = parsed.data.product_purchase_per_box * pcs_per_box;
 
     const { product_pic, ...rest } = parsed.data;
     const payload = {
       ...rest,
       product_pic: product_pic && product_pic !== "" ? product_pic : null,
       product_pcs_per_box: pcs_per_box,
-      product_pcs_qty,
     };
 
     const { data, error } = await supabaseServer.from(tableName).insert([payload]).select().single();
