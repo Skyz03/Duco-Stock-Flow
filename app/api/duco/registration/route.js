@@ -10,6 +10,7 @@ const postSchema = z.object({
   product_name: z.string().min(1),
   product_pic: z.union([z.string().url(), z.literal(""), z.null()]).optional(),
   country_of_origin: z.string().min(1),
+  cup_qty_per_box: z.coerce.number().int().positive(),
 });
 
 const patchSchema = z.object({
@@ -59,7 +60,7 @@ export async function POST(request) {
     }
 
     const { product_pic, ...rest } = parsed.data;
-    const payload = { ...rest, product_pic: product_pic && product_pic !== "" ? product_pic : null, cup_qty_per_box: null };
+    const payload = { ...rest, product_pic: product_pic && product_pic !== "" ? product_pic : null };
 
     const { data, error } = await supabaseServer.from(tableName).insert([payload]).select().single();
     if (error) {

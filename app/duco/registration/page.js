@@ -1,10 +1,10 @@
-import { RegistrationTabs } from "../../../components/shared/RegistrationTabs";
+import { EntriesWorkbench } from "../../../components/shared/EntriesWorkbench";
 import { THEME } from "../../../lib/theme";
 import { COUNTRY_SUGGESTIONS } from "../../../lib/countries";
 
 export const metadata = {
   title: "Products — Duco Cups",
-  description: "Register products, then set fan per box from the Products tab.",
+  description: "Register products for Duco Cups.",
 };
 
 const fields = [
@@ -12,6 +12,7 @@ const fields = [
   { name: "product_name", label: "Product name", type: "string", required: true, placeholder: "e.g. Classic White Cup" },
   { name: "product_pic", label: "Product image", type: "image_url", required: false },
   { name: "country_of_origin", label: "Country of origin", type: "string", required: true, placeholder: "e.g. Nepal", suggestions: COUNTRY_SUGGESTIONS },
+  { name: "cup_qty_per_box", label: "Fan per box", type: "integer", required: true, placeholder: "e.g. 100" },
 ];
 
 const columns = [
@@ -24,16 +25,17 @@ const columns = [
 
 export default function DucoRegistrationPage() {
   return (
-    <div className="max-w-6xl">
-      <RegistrationTabs
-        accentColor={THEME.duco.primary}
+    <div className="max-w-6xl space-y-6">
+      <div>
+        <h1 className="text-2xl font-semibold text-zinc-900 md:text-3xl">Product registration</h1>
+        <p className="mt-1 text-sm text-zinc-600">Register new products including fan per box.</p>
+      </div>
+      <EntriesWorkbench
+        title=""
         apiPath="/api/duco/registration"
-        autocompletePath="/api/duco/products"
+        accentColor={THEME.duco.primary}
         fields={fields}
         columns={columns}
-        qtyField="cup_qty_per_box"
-        qtyLabel="Fan per box"
-        qtyPlaceholder="e.g. 100"
       />
     </div>
   );
