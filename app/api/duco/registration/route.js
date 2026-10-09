@@ -59,7 +59,7 @@ export async function POST(request) {
     }
 
     const { product_pic, ...rest } = parsed.data;
-    const payload = { ...rest, product_pic: product_pic && product_pic !== "" ? product_pic : null };
+    const payload = { ...rest, product_pic: product_pic && product_pic !== "" ? product_pic : null, cup_qty_per_box: null };
 
     const { data, error } = await supabaseServer.from(tableName).insert([payload]).select().single();
     if (error) {
